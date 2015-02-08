@@ -1,6 +1,10 @@
 #ifndef PIN_H__
 #define PIN_H__
 
+//I2C1_DevStructure is defined in CPAL
+//All sensors with i2c interface should be connected to I2C1
+#define I2C_HOST_DEV I2C1_DevStructure
+
 #define RELAY_PORT  GPIOA
 #define RELAY_PIN   GPIO_Pin_0
 

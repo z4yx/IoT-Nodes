@@ -6,6 +6,8 @@
 #include "usbcommon.h"
 #include "usb_lib.h"
 #include "esp8266.h"
+#include "i2c.h"
+#include "board.h"
 
 static void Init()
 {
@@ -17,10 +19,19 @@ static void Init()
 	ESP8266_Enable_CDC_Forwarding();
 }
 
+static void ExtInit()
+{
+#ifdef ENABLE_DHT11
+#endif
+#ifdef ENABLE_BH1750
+#endif
+}
+
 int main(void)
 {
 
 	Init();
+	ExtInit();
 
 	LED_GREEN(true);
 

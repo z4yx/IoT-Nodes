@@ -93,6 +93,8 @@ SRC += $(wildcard $(SRC_DIR)../Libraries/STM32F10x_StdPeriph_Driver/src/*.c)
 SRC += $(SRC_DIR)../Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.c 
 
 SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_USB-FS-Device_Driver/src/*.c)
+SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/src/*.c)
+SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/devices/stm32f10x/*.c)
 SRC += $(wildcard $(SRC_DIR)usb/src/*.c)
 SRC += $(wildcard $(SRC_DIR)drivers/*.c)
 
@@ -155,8 +157,11 @@ EXTRAINCDIRS += ../../Libraries/STM32F10x_StdPeriph_Driver/inc
 EXTRAINCDIRS += ../../Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
 EXTRAINCDIRS += ../../Libraries/CMSIS/CM3/CoreSupport
 EXTRAINCDIRS += ../../Libraries/STM32_USB-FS-Device_Driver/inc 
+EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/inc 
+EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/devices/stm32f10x 
 EXTRAINCDIRS += ../usb/inc
 EXTRAINCDIRS += ../drivers
+EXTRAINCDIRS += ../config
 
 # List any extra directories to look for library files here.
 #     Each directory must be seperated by a space.

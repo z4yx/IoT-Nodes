@@ -2,7 +2,7 @@
 #define __COMMON__H__
 
 #include "stm32f10x.h"
-#include "config/pin.h"
+#include "pin.h"
 #include <stdint.h>
 
 #define NULL ((void*)0)
