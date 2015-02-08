@@ -25,7 +25,7 @@
 #include "stm32f10x_it.h"
 #include "usb_lib.h"
 #include "usb_istr.h"
-#include "usbcdc.h"
+#include "esp8266.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Examples
   * @{
@@ -158,28 +158,6 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
 }
 
 /*******************************************************************************
-* Function Name  : USBCDC_USART_IRQHandler
-* Description    : This function handles USB_CDC_USART global interrupt request.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void USBCDC_USART_IRQHandler(void)
-{
-  if (USART_GetITStatus(USB_CDC_USART, USART_IT_RXNE) != RESET)
-  {
-    /* Send the received data to the PC Host*/
-    USART_To_USB_Send_Data();
-  }
-
-  /* If overrun condition occurs, clear the ORE flag and recover communication */
-  if (USART_GetFlagStatus(USB_CDC_USART, USART_FLAG_ORE) != RESET)
-  {
-    (void)USART_ReceiveData(USB_CDC_USART);
-  }
-}
-
-/*******************************************************************************
 * Function Name  : USB_FS_WKUP_IRQHandler
 * Description    : This function handles USB WakeUp interrupt request.
 * Input          : None
@@ -207,6 +185,11 @@ void USBWakeUp_IRQHandler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
+
+void USART2_IRQHandler(void)
+{
+  ESP8266_USART_IT_Handler();
+}
 
 /**
   * @}

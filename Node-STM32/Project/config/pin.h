@@ -32,6 +32,16 @@
 #define LED_BRD_B_PIN GPIO_Pin_9
 #define LED_BRD_G_PIN GPIO_Pin_8
 
+#define KEY_BRD_PORT  GPIOB
+#define KEY_BRD_PIN   GPIO_Pin_0
+
 #define USART_DBG     USART1
+
+#define ESP8266_IO_PORT GPIOC
+#define ESP8266_IO0_PIN GPIO_Pin_13
+#define ESP8266_IO2_PIN GPIO_Pin_14
+#define ESP8266_RST_PIN GPIO_Pin_15
+#define ESP8266_USART   USART2
+#define ESP8266_USART_IRQ   USART2_IRQn
 
 #endif

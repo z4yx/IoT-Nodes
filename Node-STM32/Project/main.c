@@ -5,6 +5,7 @@
 #include "systick.h"
 #include "usbcommon.h"
 #include "usb_lib.h"
+#include "esp8266.h"
 
 static void Init()
 {
@@ -12,6 +13,8 @@ static void Init()
 	LED_Config();
 	USARTx_Config(USART_DBG, 115200);
 	USBCommon_Init();
+	ESP8266_Init();
+	ESP8266_Enable_CDC_Forwarding();
 }
 
 int main(void)
@@ -21,11 +24,10 @@ int main(void)
 
 	LED_GREEN(true);
 
-	DBG_MSG( "Usb Init Started\r\n");
+	DBG_MSG( "Usb Init Started");
 	USB_Init();
 
-	DBG_MSG( "Usb Init Succeeded\r\n");
-
+	DBG_MSG( "Usb Init Succeeded");
 	LED_BLUE(true);
 
 	while (1)

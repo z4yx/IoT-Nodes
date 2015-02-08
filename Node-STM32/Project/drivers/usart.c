@@ -81,16 +81,16 @@ void USARTx_Config(USART_TypeDef* USARTx, u32 USART_BaudRate)
 /*
  * 串口接收中断配置
  */
-void USART_RxInt_Config(bool bEnabled)
+void USART_RxInt_Config(bool bEnabled, USART_TypeDef* USARTx, uint8_t IRQn)
 {
     NVIC_InitTypeDef NVIC_InitStructure;
-    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn; //指定中断源
+    NVIC_InitStructure.NVIC_IRQChannel = IRQn; //指定中断源
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;   // 指定响应优先级别
     NVIC_InitStructure.NVIC_IRQChannelCmd = (bEnabled ? ENABLE : DISABLE);
     NVIC_Init(&NVIC_InitStructure);
 
-    USART_ITConfig(USART1, USART_IT_RXNE, (bEnabled ? ENABLE : DISABLE));
+    USART_ITConfig(USARTx, USART_IT_RXNE, (bEnabled ? ENABLE : DISABLE));
 }
 
 /*
