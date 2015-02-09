@@ -8,6 +8,7 @@
 #include "esp8266.h"
 #include "i2c.h"
 #include "board.h"
+#include "bh1750.h"
 
 static void Init()
 {
@@ -24,6 +25,7 @@ static void ExtInit()
 #ifdef ENABLE_DHT11
 #endif
 #ifdef ENABLE_BH1750
+	BH1750_Init();
 #endif
 }
 

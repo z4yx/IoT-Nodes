@@ -14,6 +14,7 @@
 #elif defined(BOARD_CUSTOM)
 
 #define ENABLE_DHT11
+#define ENABLE_BH1750
 
 #else
 #error Must choose one board
