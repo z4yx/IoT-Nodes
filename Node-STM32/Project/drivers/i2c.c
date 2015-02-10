@@ -1,6 +1,6 @@
 #include "i2c.h"
 #include "common.h"
-#include "cpal.h"
+#include "cpal_i2c.h"
 
 void I2C_Lib_WaitForRWDone(void)
 {
@@ -16,7 +16,7 @@ void I2C_Lib_MasterRW(I2C_Lib_Op_Type op,uint8_t slave_addr,uint16_t length,uint
     
     CPAL_Transfer.wNumData = length;
     CPAL_Transfer.pbBuffer = data;
-    CPAL_Transfer.wAddr1 = (uint32_t)slave_addr;
+    CPAL_Transfer.wAddr1 = (uint32_t)slave_addr<<1; //device address is high 7-bit
     // CPAL_Transfer.wAddr2 = (uint32_t)reg_addr;
 
     I2C_HOST_DEV.wCPAL_Options = CPAL_OPT_NO_MEM_ADDR;

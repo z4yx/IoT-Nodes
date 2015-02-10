@@ -18,7 +18,7 @@ Ported to STM32 by YuXiang Zhang, Jan 2015.
 #define BH1750_DEBUG 0
 #endif
 
-#define BH1750_I2CADDR (0x23<<1)
+#define BH1750_I2CADDR 0x23
 
 // No active state
 #define BH1750_POWER_DOWN 0x00
