@@ -41,19 +41,13 @@ char BMP180_StartPressure(char oversampling);
 char BMP180_GetPressure(double *P, double *T);
 // return absolute pressure measurement from previous startPressure command
 // note: requires previous temperature measurement in variable T
-// places returned value in P variable (mbar)
+// places returned value in P variable (Pa)
 // returns 1 for success, 0 for fail
-
-double BMP180_Sealevel(double P, double A);
-// convert absolute pressure to sea-level pressure (as used in weather data)
-// P: absolute pressure (mbar)
-// A: current altitude (meters)
-// returns sealevel pressure in mbar
 
 double BMP180_Altitude(double P, double P0);
 // convert absolute pressure to altitude (given baseline pressure; sea-level, runway, etc.)
-// P: absolute pressure (mbar)
-// P0: fixed baseline pressure (mbar)
+// P: absolute pressure (Pa)
+// P0: fixed baseline pressure (Pa)
 // returns signed altitude in meters
 
 
