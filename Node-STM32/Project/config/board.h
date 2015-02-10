@@ -11,6 +11,10 @@
 
 #define ENABLE_DHT11
 
+#elif defined(BOARD_PRESSURE)
+
+#define ENABLE_BMP180
+
 #elif defined(BOARD_CUSTOM)
 
 #define ENABLE_DHT11

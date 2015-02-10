@@ -9,6 +9,7 @@
 #include "i2c.h"
 #include "board.h"
 #include "bh1750.h"
+#include "bmp180.h"
 
 static void Init()
 {
@@ -26,6 +27,9 @@ static void ExtInit()
 #endif
 #ifdef ENABLE_BH1750
 	BH1750_Init();
+#endif
+#ifdef ENABLE_BMP180
+	BMP180_Init();
 #endif
 }
 
