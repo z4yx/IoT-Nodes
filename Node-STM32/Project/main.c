@@ -10,6 +10,7 @@
 #include "board.h"
 #include "bh1750.h"
 #include "bmp180.h"
+#include "dht.h"
 
 static void Init()
 {
@@ -24,6 +25,7 @@ static void Init()
 static void ExtInit()
 {
 #ifdef ENABLE_DHT11
+	DHT_Init(DHT11);
 #endif
 #ifdef ENABLE_BH1750
 	BH1750_Init();
