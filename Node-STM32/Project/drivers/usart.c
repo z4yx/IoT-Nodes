@@ -118,6 +118,18 @@ int USART_getchar(USART_TypeDef* USARTx)
 }
 
 /*
+ * 通过串口发送一个字符串并换行
+ */
+void USART_puts(USART_TypeDef* USARTx, char *str)
+{
+    while(*str){
+        USART_putchar(USARTx, *str);
+        str++;
+    }
+    USART_putchar(USARTx, '\n');
+}
+
+/*
  * 读入一个整数值
  */
 int USART_ReadInt(USART_TypeDef* USARTx)
