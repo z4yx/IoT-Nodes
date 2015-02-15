@@ -6,11 +6,7 @@
 #include "usbcommon.h"
 #include "usb_lib.h"
 #include "esp8266.h"
-#include "i2c.h"
-#include "board.h"
-#include "bh1750.h"
-#include "bmp180.h"
-#include "dht.h"
+#include "iot_node.h"
 
 static void Init()
 {
@@ -22,24 +18,10 @@ static void Init()
 	ESP8266_Enable_CDC_Forwarding();
 }
 
-static void ExtInit()
-{
-#ifdef ENABLE_DHT11
-	DHT_Init(DHT11);
-#endif
-#ifdef ENABLE_BH1750
-	BH1750_Init();
-#endif
-#ifdef ENABLE_BMP180
-	BMP180_Init();
-#endif
-}
-
 int main(void)
 {
 
 	Init();
-	ExtInit();
 
 	LED_GREEN(true);
 
@@ -49,9 +31,7 @@ int main(void)
 	DBG_MSG( "Usb Init Succeeded");
 	LED_BLUE(true);
 
-	while (1)
-	{
-	}
+	IoTNode_Begin();
 }
 
 #ifdef  USE_FULL_ASSERT
