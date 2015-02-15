@@ -105,6 +105,14 @@ void RCC_TIMClockCmd(TIM_TypeDef* TIMx, FunctionalState NewState)
 	}
 }
 
+//获得芯片的唯一ID
+void Chip_GetUniqueID(uint32_t ChipUniqueID[3])
+{
+	ChipUniqueID[0] = *(uint32_t *)(0X1FFFF7F0);
+    ChipUniqueID[1] = *(uint32_t *)(0X1FFFF7EC);
+    ChipUniqueID[2] = *(uint32_t *)(0X1FFFF7E8);
+}
+
 //根据频率(Hz)计算TIM的参数
 void Timer_16bit_Calc(int freq, uint16_t *period, uint16_t *prescaler)
 {
