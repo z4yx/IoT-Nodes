@@ -19,7 +19,7 @@ m:on("message", function(conn, topic, data)
       end
 end)
 
-m:connect("192.168.2.1", 1883, 0, function(conn) 
+m:connect("192.168.1.103", 1883, 0, function(conn) 
     print("connected") 
     m:subscribe("/config/name/file/+", 2, function(conn) print("subscribe success") end)
 end)
