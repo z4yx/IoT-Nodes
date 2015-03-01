@@ -97,6 +97,8 @@ SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/devices/stm32f10x/*.c)
 SRC += $(wildcard $(SRC_DIR)usb/src/*.c)
 SRC += $(wildcard $(SRC_DIR)drivers/*.c)
+SRC += $(wildcard $(SRC_DIR)drivers/sensors/*.c)
+SRC += $(wildcard $(SRC_DIR)drivers/actuators/*.c)
 
 # List C source files here which must be compiled in ARM-Mode.
 # use file-extension c for "c-only"-files
@@ -161,6 +163,8 @@ EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/inc
 EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/devices/stm32f10x 
 EXTRAINCDIRS += ../usb/inc
 EXTRAINCDIRS += ../drivers
+EXTRAINCDIRS += ../drivers/sensors
+EXTRAINCDIRS += ../drivers/actuators
 EXTRAINCDIRS += ../config
 
 # List any extra directories to look for library files here.
