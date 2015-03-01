@@ -1,6 +1,8 @@
 #ifndef BOARD_H__
 #define BOARD_H__
 
+//#define ESP_DBG_CDC
+
 #define BOARD_RELAY
 
 #if defined(BOARD_LIGHT_SENSOR)
