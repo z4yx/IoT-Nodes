@@ -64,7 +64,7 @@ static void parse8266Output(uint8_t in)
             paramBuf[paramLen] = '\0';
             gotResponse(tokenBuf, paramBuf);
             state = STATE_WAIT;
-        }else if(paramLen+1 < sizeof(paramLen)){
+        }else if(paramLen+1 < sizeof(paramBuf)){
             paramBuf[paramLen++] = in;
         }
         break;
@@ -98,7 +98,7 @@ void ESP8266_USART_IT_Handler()
 
 void ESP8266_CheckWifiState()
 {
-    USART_puts(ESP8266_USART, "print('#wifi+'..wifi.sta.status())");
+    USART_puts(ESP8266_USART, "print('\\035wifi+'..wifi.sta.status())");
 }
 
 bool ESP8266_IsStarted()
