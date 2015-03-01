@@ -18,7 +18,7 @@ function parser.parse(name,topic,data)
 	elseif topic:find("^/control/")then
 		local tok = topic:match("^/control/.+/(.+)")
 		if tok then
-			print("#"..tok.."+"..data)
+			print("#control+"..tok.."+"..data)
 		end
 	end
 end

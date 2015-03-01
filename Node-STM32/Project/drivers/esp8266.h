@@ -11,6 +11,7 @@ void ESP8266_InitMqtt(char *name);
 void ESP8266_MqttConnect(char *ip, int port);
 bool ESP8266_IsMqttConnected();
 void ESP8266_MqttPublishValue(char *key, char *value);
+void ESP8266_MqttPublishEvent(char *key, char *value);
 
 void ESP8266_USART_IT_Handler(void);
 

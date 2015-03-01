@@ -4,7 +4,7 @@ function M.init( name )
 	M.m = mqtt.Client()
 	M.parser = require 'parser'
 	M.name = name
-	M.m:lwt("/events/"..name.."/offline", "", 1, 0)
+	M.m:lwt("/events/"..name.."/offline", "", 2, 0)
 	M.m:on("connect", function(con)
 		print ("#connected")
 		M.m:subscribe("/control/"..M.name.."/+",2)
@@ -18,11 +18,8 @@ end
 function M.connect( server, port )
 	M.m:connect(server, port, 0) -- 1 for secure
 end
-function M.publish_value( key, value )
-	M.m:publish("/values/"..M.name.."/"..key,value,1,1)
-end
-function M.publish_event( key, value )
-	M.m:publish("/events/"..M.name.."/"..key,value,2,0)
+function M.publish(cate, key, value, qos, retain)
+	M.m:publish("/"..cate.."/"..M.name.."/"..key,value,qos,retain)
 end
 function M.subscribe( topic, qos )
 	M.m:subscribe(topic,qos, function(conn) print("#subscribed") end)

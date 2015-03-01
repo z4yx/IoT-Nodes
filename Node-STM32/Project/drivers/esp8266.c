@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "usbcdc.h"
 #include "systick.h"
+#include "iot_node.h"
 
 static bool CDC_Forwarding;
 static bool wifi_connected;
@@ -20,6 +21,8 @@ static void RedirectUSBToESP8266(uint8_t* data_buffer, uint8_t Nb_bytes)
 static void gotResponse(char *token, char *param)
 {
     DBG_MSG("[[%s]][[%s]]\n", token, param);
+    if(strcmp(token, "control") == 0)
+        IoTNode_HandleControl(param);
     if(strcmp(token, "connected") == 0)
         mqtt_connected = true;
     else if(strcmp(token, "offline") == 0)
@@ -132,7 +135,13 @@ bool ESP8266_IsMqttConnected()
 
 void ESP8266_MqttPublishValue(char *key, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish_value('%s','%s')\r", key, value);
+    USART_printf(ESP8266_USART, "c.publish('values','%s','%s',1,1)\r", key, value);
+    Delay_ms(300);
+}
+
+void ESP8266_MqttPublishEvent(char *key, char *value)
+{
+    USART_printf(ESP8266_USART, "c.publish('events','%s','%s',2,0)\r", key, value);
     Delay_ms(300);
 }
 

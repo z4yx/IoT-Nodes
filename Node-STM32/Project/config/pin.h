@@ -7,6 +7,7 @@
 
 #define RELAY_PORT  GPIOA
 #define RELAY_PIN   GPIO_Pin_0
+#define RELAY_ACTIVE_VAL   Bit_SET
 
 #define BMP180_PORT    GPIOB
 #define BMP180_SDA_PIN GPIO_Pin_7
