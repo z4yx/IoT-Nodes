@@ -8,6 +8,7 @@
 #include "esp8266.h"
 #include "iot_node.h"
 #include "board.h"
+#include "func.h"
 
 static void Init()
 {
@@ -26,7 +27,7 @@ int main(void)
 
 	LED_GREEN(true);
 
-#ifdef ESP_DBG_CDC
+#if defined(ESP_DBG_CDC)||defined(ESP_FLASH_FIRMWARE)
 	DBG_MSG( "Usb Init Started");
 	USB_Init();
 
@@ -34,7 +35,11 @@ int main(void)
 #endif
 	LED_BLUE(true);
 
+#ifndef ESP_FLASH_FIRMWARE
 	IoTNode_Begin();
+#else
+	while(true);
+#endif
 }
 
 #ifdef  USE_FULL_ASSERT

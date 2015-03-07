@@ -142,13 +142,19 @@ bool ESP8266_IsMqttConnected()
 
 void ESP8266_MqttPublishValue(char *key, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish('values','%s','%s',1,1)\r", key, value);
+    USART_printf(ESP8266_USART, "c.publish('values',[[%s]],[[%s]],1,1)\r", key, value);
     Delay_ms(300);
 }
 
 void ESP8266_MqttPublishEvent(char *key, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish('events','%s','%s',2,0)\r", key, value);
+    USART_printf(ESP8266_USART, "c.publish('events',[[%s]],[[%s]],2,0)\r", key, value);
+    Delay_ms(300);
+}
+
+void ESP8266_ReportCapability(char *type, char *value)
+{
+    USART_printf(ESP8266_USART, "c.publish('capability',[[%s]],[[%s]],1,1)\r", type, value);
     Delay_ms(300);
 }
 

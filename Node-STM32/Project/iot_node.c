@@ -93,8 +93,7 @@ static void initNetwork(void)
     ESP8266_MqttConnect(MQTT_BROKER_IP, MQTT_BROKER_PORT);
     while (!ESP8266_IsMqttConnected());
     DBG_MSG("MQTT connected");
-    Delay_ms(300);
-    ESP8266_MqttPublishEvent("online", "");
+    Delay_ms(1000);
 }
 
 static bool fetchActuatorValue(struct actuator_t* a, const char *value, bool* changed)
@@ -152,6 +151,57 @@ static void doAction(char* ctrl)
     }
 }
 
+void reportNodeInfo(void)
+{
+    const char *ctrl_type;
+    static char capability[512];
+    ESP8266_MqttPublishEvent("online", "");
+    Delay_ms(1000);
+    capability[0] = '\0';
+    for (int i = 0; i < sensors_count; ++i)
+    {
+        if (!sensors[i]->flags & SENSOR_FLAG_INITIALIZED)
+            continue;
+        strcat(capability, sensors[i]->input_name);
+        strcat(capability, ",");
+        strcat(capability, sensors[i]->unit);
+        strcat(capability, "\n");
+    }
+    if(capability[0] != '\0'){
+        ESP8266_ReportCapability("values", capability);
+        Delay_ms(1000);
+    }
+
+    capability[0] = '\0';
+    for (int i = 0; i < actuators_count; ++i)
+    {
+        if (!actuators[i]->flags & ACTUATOR_FLAG_INITIALIZED)
+            continue;
+        strcat(capability, actuators[i]->actuator_name);
+        strcat(capability, ",");
+        switch(actuators[i]->value_type){
+        case ACTUATOR_VALUE_BOOL:
+            ctrl_type = "bool";
+            break;
+        case ACTUATOR_VALUE_INT:
+            ctrl_type = "int";
+            break;
+        case ACTUATOR_VALUE_FLOAT:
+            ctrl_type = "float";
+            break;
+        default:
+            ctrl_type = "unknown";
+            ERR_MSG("Unknown ctrl_type for %s", actuators[i]->actuator_name);
+            break;
+        }
+        strcat(capability, ctrl_type);
+        strcat(capability, "\n");
+    }
+    if(capability[0] != '\0'){
+        ESP8266_ReportCapability("control", capability);
+    }
+}
+
 void IoTNode_HandleControl(const char* param)
 {
     //temporarily store control command to avoid
@@ -169,6 +219,7 @@ void IoTNode_Begin()
     initActuators();
     initSensors();
     initNetwork();
+    reportNodeInfo();
     while (1) {
         if(control_buf[0] != '\0'){
             doAction(control_buf);
