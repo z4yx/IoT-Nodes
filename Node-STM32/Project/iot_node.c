@@ -4,6 +4,7 @@
 #include "sensors.h"
 #include "actuators.h"
 #include "systick.h"
+#include "func.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -89,7 +90,7 @@ static void initNetwork(void)
     snprintf(name_buf, sizeof(name_buf),
              "IoT_%08x%08x%08x", id[0], id[1], id[2]);
     ESP8266_InitMqtt(name_buf);
-    ESP8266_MqttConnect("192.168.1.30", 1883);
+    ESP8266_MqttConnect(MQTT_BROKER_IP, MQTT_BROKER_PORT);
     while (!ESP8266_IsMqttConnected());
     DBG_MSG("MQTT connected");
     Delay_ms(300);

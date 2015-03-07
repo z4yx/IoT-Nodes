@@ -4,6 +4,7 @@
 #include "usbcdc.h"
 #include "systick.h"
 #include "iot_node.h"
+#include "func.h"
 
 static bool CDC_Forwarding;
 static bool wifi_connected;
@@ -78,7 +79,13 @@ static void parse8266Output(uint8_t in)
 void ESP8266_Init()
 {
     CDC_Forwarding = false;
-    USARTx_Config(ESP8266_USART, 9600);
+    USARTx_Config(ESP8266_USART, 
+#ifdef ESP_FLASH_FIRMWARE
+        115200
+#else
+        9600
+#endif
+    );
     USART_RxInt_Config(true, ESP8266_USART, ESP8266_USART_IRQ);
 }
 

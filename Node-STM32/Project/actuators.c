@@ -2,6 +2,7 @@
 #include "common.h"
 #include "switch.h"
 #include "board.h"
+#include "func.h"
 
 static bool actuator_switch_init(struct actuator_t* a)
 {

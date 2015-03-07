@@ -4,6 +4,7 @@
 #include "bmp180.h"
 #include "dht.h"
 #include "board.h"
+#include "func.h"
 #include "systick.h"
 
 static bool sensor_bh1750_init(struct sensor_t *s)
