@@ -1,8 +1,9 @@
 #ifndef BOARD_H__
 #define BOARD_H__
 
-
-#define BOARD_CUSTOM
+//===select a board here===
+#define BOARD_PYROELECTRICITY
+//=========================
 
 #if defined(BOARD_LIGHT_SENSOR)
 
@@ -19,6 +20,10 @@
 #elif defined(BOARD_RELAY)
 
 #define ENABLE_SWITCH
+
+#elif defined(BOARD_PYROELECTRICITY)
+
+#define ENABLE_SR501
 
 #elif defined(BOARD_CUSTOM)
 

@@ -23,6 +23,9 @@
 #define DS18B20_PORT GPIOA
 #define DS18B20_PIN  GPIO_Pin_1
 
+#define SR501_PORT GPIOA
+#define SR501_PIN  GPIO_Pin_0
+
 #define IR_EMIT_PORT GPIOA
 #define IR_EMIT_PIN  GPIO_Pin_6
 

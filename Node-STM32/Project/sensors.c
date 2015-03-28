@@ -3,6 +3,7 @@
 #include "bh1750.h"
 #include "bmp180.h"
 #include "dht.h"
+#include "sr501.h"
 #include "board.h"
 #include "func.h"
 #include "systick.h"
@@ -101,6 +102,29 @@ static struct sensor_t sensor_bmp180 = {
     .measure = sensor_bmp180_measure,
 };
 
+static bool sensor_sr501_init(struct sensor_t *s)
+{
+    SR501_Init();
+    return true;
+}
+
+static bool sensor_sr501_measure(struct sensor_t *s)
+{
+    s->value.value_bool = SR501_Read();
+    return true;
+}
+
+static struct sensor_t sensor_sr501 = {
+    .model = "sr501",
+    .input_name = "human",
+    .unit = "*",
+    .flags = SENSOR_PUBLISH_CHANGES_ONLY,
+    .value_type = SENSOR_VALUE_BOOL,
+    .sample_rate = 100, //ms
+    .driver_init = sensor_sr501_init,
+    .measure = sensor_sr501_measure,
+};
+
 struct sensor_t *sensors[] = {
 #ifdef ENABLE_BH1750
     &sensor_bh1750,
@@ -111,6 +135,9 @@ struct sensor_t *sensors[] = {
 #endif
 #ifdef ENABLE_BMP180
     &sensor_bmp180,
+#endif
+#ifdef ENABLE_SR501
+    &sensor_sr501,
 #endif
 };
 

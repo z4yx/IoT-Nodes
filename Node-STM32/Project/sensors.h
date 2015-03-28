@@ -3,11 +3,17 @@
 
 #include "systick.h"
 
-enum {SENSOR_VALUE_INT, SENSOR_VALUE_FLOAT};
+enum {SENSOR_VALUE_INT, SENSOR_VALUE_FLOAT, SENSOR_VALUE_BOOL};
 enum {
     SENSOR_FLAG_INITIALIZED = 1, 
+    SENSOR_PUBLISH_CHANGES_ONLY = 2,
 };
 
+union sensor_value_t{
+    int value_int;
+    float value_float;
+    bool value_bool;
+};
 struct sensor_t {
     char model[8];
     char input_name[16]; //"temperature", "humidity", etc.
@@ -15,10 +21,7 @@ struct sensor_t {
     uint8_t value_type;
     uint8_t flags;
     uint8_t reserved[2];
-    union {
-        int value_int;
-        float value_float;
-    } value;
+    union sensor_value_t value;
     SysTick_t latest_sample;
     SysTick_t sample_rate;
     bool (*driver_init)(struct sensor_t *);

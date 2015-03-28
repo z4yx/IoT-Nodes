@@ -47,6 +47,10 @@ static void publishMeasurement(struct sensor_t *s)
         snprintf(value_buf, sizeof(value_buf), "%.2f %s",
                  s->value.value_float,
                  s->unit);
+    else if (s->value_type == SENSOR_VALUE_BOOL)
+        snprintf(value_buf, sizeof(value_buf), "%s %s",
+                 s->value.value_bool ? "true" : "false",
+                 s->unit);
     else {
         ERR_MSG("Unknown value type of %s", s->model);
         return;
@@ -63,9 +67,15 @@ static void updateMeasurement()
             continue;
         if (now - sensors[i]->latest_sample < sensors[i]->sample_rate)
             continue;
+        union sensor_value_t saved_value = sensors[i]->value;
         if (sensors[i]->measure(sensors[i])) {
             sensors[i]->latest_sample = now;
-            publishMeasurement(sensors[i]);
+            if(sensors[i]->flags & SENSOR_PUBLISH_CHANGES_ONLY){
+                if(memcmp(&saved_value, &sensors[i]->value, sizeof(saved_value)))
+                    publishMeasurement(sensors[i]);
+            }else{
+                publishMeasurement(sensors[i]);
+            }
         } else {
             ERR_MSG("Measuring %s on %s failed",
                     sensors[i]->input_name,
