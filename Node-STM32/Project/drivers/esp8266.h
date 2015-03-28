@@ -2,7 +2,8 @@
 #define ESP8266_H__
 
 
-void ESP8266_Init(void);
+bool ESP8266_UpgradeModeDetected(void);
+void ESP8266_Init(bool upgrade_baud);
 void ESP8266_Enable_CDC_Forwarding(void);
 bool ESP8266_IsStarted(void);
 void ESP8266_CheckWifiState(void);

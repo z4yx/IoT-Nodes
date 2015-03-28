@@ -16,30 +16,44 @@ static void Init()
 	LED_Config();
 	USARTx_Config(USART_DBG, 115200);
 	USBCommon_Init();
-	ESP8266_Init();
-	ESP8266_Enable_CDC_Forwarding();
 }
 
 int main(void)
 {
+	bool upgradeMode = ESP8266_UpgradeModeDetected();
 
 	Init();
 
+	ESP8266_Init(upgradeMode);
+
 	LED_GREEN(true);
 
-#if defined(ESP_DBG_CDC)||defined(ESP_FLASH_FIRMWARE)
-	DBG_MSG( "Usb Init Started");
-	USB_Init();
-
-	DBG_MSG( "Usb Init Succeeded");
+#if defined(ESP_DBG_CDC)
+	if(true)
+#else
+	if(upgradeMode)
 #endif
+	{
+		Delay_ms(2000);
+		ESP8266_Enable_CDC_Forwarding();
+		DBG_MSG( "Usb Init Started");
+		USB_Init();
+		DBG_MSG( "Usb Init Succeeded");
+	}
+	
 	LED_BLUE(true);
 
-#ifndef ESP_FLASH_FIRMWARE
-	IoTNode_Begin();
-#else
-	while(true);
-#endif
+	if(upgradeMode){
+		DBG_MSG("ESP8266 Upgrade Mode...");
+		while(true){
+			LED_BLUE(true);
+			Delay_ms(200);
+			LED_BLUE(false);
+			Delay_ms(200);
+		}
+	}
+	else
+		IoTNode_Begin();
 }
 
 #ifdef  USE_FULL_ASSERT
