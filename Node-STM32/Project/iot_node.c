@@ -88,8 +88,22 @@ static void initNetwork(void)
 {
     uint32_t id[3];
     char name_buf[32];
+    SysTick_t tmr = GetSystemTick();
     
-    while (!ESP8266_IsStarted());
+    while (!ESP8266_IsStarted()) {
+        if(GetSystemTick()-tmr > ESP8266_BOOT_TIMEOUT) {
+            ERR_MSG("ESP8266 booting timed out");
+            if(ESP8266_CheckLuaScripts()){
+                DBG_MSG("Restarting ESP8266...");
+                ESP8266_Restart();
+            }else{
+                DBG_MSG("Lua scripts not found, initializing...");
+                ESP8266_InitializeLuaScripts();
+                ESP8266_Restart();
+            }
+            tmr = GetSystemTick();
+        }
+    }
     do {
         Delay_ms(1000);
         ESP8266_CheckWifiState();

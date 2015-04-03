@@ -6,10 +6,16 @@
 #include "iot_node.h"
 #include "func.h"
 
+#define ESP8266_LUA_CMD(format, ...) do{\
+    USART_printf(ESP8266_USART, format "\r", ##__VA_ARGS__);\
+    Delay_ms(300);\
+}while(0)
+
 static bool CDC_Forwarding;
 static bool wifi_connected;
 static bool mqtt_connected;
 static bool esp8266_stated;
+static bool last_cmd_result;
 
 static void RedirectUSBToESP8266(uint8_t* data_buffer, uint8_t Nb_bytes)
 {
@@ -34,6 +40,11 @@ static void gotResponse(char *token, char *param)
             wifi_connected = true;
     }else if(strcmp(token, "started") == 0)
         esp8266_stated = true;
+    else if(strcmp(token, "yes") == 0)
+        last_cmd_result = true;
+    else if(strcmp(token, "no") == 0)
+        last_cmd_result = false;
+
 }
 
 static void parse8266Output(uint8_t in)
@@ -115,7 +126,7 @@ void ESP8266_USART_IT_Handler()
 
 void ESP8266_CheckWifiState()
 {
-    USART_puts(ESP8266_USART, "print('\\035wifi+'..wifi.sta.status())");
+    ESP8266_LUA_CMD("print('\\035wifi+'..wifi.sta.status())");
 }
 
 bool ESP8266_IsStarted()
@@ -130,16 +141,14 @@ bool ESP8266_IsWifiConnected()
 
 void ESP8266_InitMqtt(char *name)
 {
-    USART_printf(ESP8266_USART, "c=require('comm');c.init('%s')\r", name);
-    Delay_ms(200);
+    ESP8266_LUA_CMD("c=require('comm');c.init('%s')", name);
 }
 
 void ESP8266_MqttConnect(char *ip, int port)
 {
     //connect is async
-    USART_printf(ESP8266_USART, "c.connect('%s',%d)\r", ip, port);
+    ESP8266_LUA_CMD("c.connect('%s',%d)", ip, port);
     // USART_puts(ESP8266_USART, "c.enable_config()");
-    Delay_ms(200);
 }
 
 bool ESP8266_IsMqttConnected()
@@ -149,19 +158,32 @@ bool ESP8266_IsMqttConnected()
 
 void ESP8266_MqttPublishValue(char *key, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish('values',[[%s]],[[%s]],1,1)\r", key, value);
-    Delay_ms(300);
+    ESP8266_LUA_CMD("c.publish('values',[[%s]],[[%s]],1,1)", key, value);
 }
 
 void ESP8266_MqttPublishEvent(char *key, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish('events',[[%s]],[[%s]],2,0)\r", key, value);
-    Delay_ms(300);
+    ESP8266_LUA_CMD("c.publish('events',[[%s]],[[%s]],2,0)", key, value);
 }
 
 void ESP8266_ReportCapability(char *type, char *value)
 {
-    USART_printf(ESP8266_USART, "c.publish('capability',[[%s]],[[%s]],1,1)\r", type, value);
-    Delay_ms(300);
+    ESP8266_LUA_CMD("c.publish('capability',[[%s]],[[%s]],1,1)", type, value);
 }
 
+void ESP8266_Restart(void)
+{
+    ESP8266_LUA_CMD("node.restart()");
+}
+
+bool ESP8266_CheckLuaScripts(void)
+{
+    ESP8266_LUA_CMD("print((file.list())['firstrun']~=nil and'\\035yes'or'\\035no')");
+    Delay_ms(500); //Wait for command result
+    return last_cmd_result;
+}
+
+void ESP8266_InitializeLuaScripts(void)
+{
+
+}
