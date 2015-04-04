@@ -12,10 +12,11 @@
 }while(0)
 
 static bool CDC_Forwarding;
-static bool wifi_connected;
-static bool mqtt_connected;
-static bool esp8266_stated;
-static bool last_cmd_result;
+static volatile bool wifi_connected;
+static volatile bool mqtt_connected;
+static volatile bool esp8266_stated;
+static volatile bool last_cmd_result;
+static volatile bool initialize_done;
 
 static void RedirectUSBToESP8266(uint8_t* data_buffer, uint8_t Nb_bytes)
 {
@@ -44,6 +45,8 @@ static void gotResponse(char *token, char *param)
         last_cmd_result = true;
     else if(strcmp(token, "no") == 0)
         last_cmd_result = false;
+    else if(strcmp(token, "initialized") == 0)
+        initialize_done = true;
 
 }
 
@@ -148,7 +151,6 @@ void ESP8266_MqttConnect(char *ip, int port)
 {
     //connect is async
     ESP8266_LUA_CMD("c.connect('%s',%d)", ip, port);
-    // USART_puts(ESP8266_USART, "c.enable_config()");
 }
 
 bool ESP8266_IsMqttConnected()
@@ -174,16 +176,43 @@ void ESP8266_ReportCapability(char *type, char *value)
 void ESP8266_Restart(void)
 {
     ESP8266_LUA_CMD("node.restart()");
+    wifi_connected = mqtt_connected = false;
+    esp8266_stated = initialize_done = false;
+    Delay_ms(2000); //Wait for restarting
 }
 
 bool ESP8266_CheckLuaScripts(void)
 {
-    ESP8266_LUA_CMD("print((file.list())['firstrun']~=nil and'\\035yes'or'\\035no')");
+    ESP8266_LUA_CMD("print((file.list())['init.lua']~=nil and'\\035yes'or'\\035no')");
     Delay_ms(500); //Wait for command result
     return last_cmd_result;
 }
 
 void ESP8266_InitializeLuaScripts(void)
 {
+    // ESP8266_LUA_CMD("file.remove('init.lua')");
+    // Delay_ms(200); //Extra delay for flash
+    ESP8266_LUA_CMD("wifi.setmode(wifi.STATION);wifi.sta.config([[%s]],[[%s]])", ROUTER_SSID, ROUTER_PASSWD);
+    Delay_ms(200); //Extra delay for flash
+    ESP8266_LUA_CMD("wifi.sta.autoconnect(1)");
+    do {
+        ESP8266_CheckWifiState();
+        Delay_ms(1000);
+    } while (!ESP8266_IsWifiConnected());
 
+    initialize_done = false;
+
+    // bootstrap from HTTP
+    // ESP8266_LUA_CMD("_,_,gw=wifi.sta.getip();sk=net.createConnection(net.TCP, 0);");
+    // ESP8266_LUA_CMD("sk:on('receive',function(sck,c)print(c)end)");
+    // ESP8266_LUA_CMD("sk:on('connection',function(sck)sk:send('GET /iot-bootstrap HTTP/1.0\\r\\nConnection: close\\r\\n\\r\\n')end)");
+    // ESP8266_LUA_CMD("sk:connect(80,gw)");
+
+    // bootstrap from MQTT
+    ESP8266_LUA_CMD("m=mqtt.Client('init'..node.chipid())");
+    ESP8266_LUA_CMD("m:on('message', function(conn, topic, data)pcall(loadstring(data));end)");
+    ESP8266_LUA_CMD("m:connect('%s',%d,0,function(conn)m:subscribe('/bootstrap/script',2,function(conn)print('subscribed');end)end)",
+        MQTT_BROKER_IP, MQTT_BROKER_PORT);
+
+    while(!initialize_done);
 }

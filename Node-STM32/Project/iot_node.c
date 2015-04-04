@@ -104,10 +104,10 @@ static void initNetwork(void)
             tmr = GetSystemTick();
         }
     }
+    DBG_MSG("ESP8266 started");
     do {
-        Delay_ms(1000);
         ESP8266_CheckWifiState();
-        Delay_ms(300);
+        Delay_ms(1000);
     } while (!ESP8266_IsWifiConnected());
 
     Chip_GetUniqueID(id);
