@@ -26,6 +26,8 @@
 #define SR501_PORT GPIOA
 #define SR501_PIN  GPIO_Pin_0
 
+#define MQ2_ADC_CHANNEL 4
+
 #define IR_EMIT_PORT GPIOA
 #define IR_EMIT_PIN  GPIO_Pin_6
 

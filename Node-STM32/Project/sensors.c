@@ -125,6 +125,28 @@ static struct sensor_t sensor_sr501 = {
     .measure = sensor_sr501_measure,
 };
 
+static bool sensor_mq2_init(struct sensor_t *s)
+{
+    MQ2_Init();
+    return true;
+}
+
+static bool sensor_mq2_measure(struct sensor_t *s)
+{
+    s->value.value_int = MQ2_Read();
+    return true;
+}
+
+static struct sensor_t sensor_mq2 = {
+    .model = "mq2",
+    .input_name = "gas",
+    .unit = "mV",
+    .value_type = SENSOR_VALUE_INT,
+    .sample_rate = 500, //ms
+    .driver_init = sensor_mq2_init,
+    .measure = sensor_mq2_measure,
+};
+
 struct sensor_t *sensors[] = {
 #ifdef ENABLE_BH1750
     &sensor_bh1750,
@@ -138,6 +160,9 @@ struct sensor_t *sensors[] = {
 #endif
 #ifdef ENABLE_SR501
     &sensor_sr501,
+#endif
+#ifdef ENABLE_MQ2
+    &sensor_mq2,
 #endif
 };
 

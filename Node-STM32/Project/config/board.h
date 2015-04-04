@@ -2,7 +2,7 @@
 #define BOARD_H__
 
 //===select a board here===
-#define BOARD_PYROELECTRICITY
+#define BOARD_GAS
 //=========================
 
 #if defined(BOARD_LIGHT_SENSOR)
@@ -24,6 +24,10 @@
 #elif defined(BOARD_PYROELECTRICITY)
 
 #define ENABLE_SR501
+
+#elif defined(BOARD_GAS)
+
+#define ENABLE_MQ2
 
 #elif defined(BOARD_CUSTOM)
 
