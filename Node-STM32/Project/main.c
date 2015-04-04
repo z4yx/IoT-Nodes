@@ -29,9 +29,9 @@ int main(void)
 	LED_GREEN(true);
 
 #if defined(ESP_DBG_CDC)
-	if(true)
+	if(USBDevice_PlugIn())
 #else
-	if(upgradeMode)
+	if(upgradeMode && USBDevice_PlugIn())
 #endif
 	{
 		Delay_ms(2000);

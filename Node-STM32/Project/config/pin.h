@@ -52,4 +52,7 @@
 #define ESP8266_USART   USART2
 #define ESP8266_USART_IRQ   USART2_IRQn
 
+#define USB_DET_PORT GPIOB
+#define USB_DET_PIN  GPIO_Pin_5
+
 #endif

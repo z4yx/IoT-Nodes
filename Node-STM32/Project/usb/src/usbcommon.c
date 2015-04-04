@@ -3,6 +3,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "usbcommon.h"
+#include "pin.h"
 
 ErrorStatus HSEStartUpStatus;
 USART_InitTypeDef USART_InitStructure;
@@ -51,8 +52,21 @@ void USBCommon_Init(void)
   Set_System();
   Set_USBClock();
   USB_Interrupts_Config();
+
+  GPIO_InitTypeDef GPIO_InitStructure;
+  RCC_GPIOClockCmd(USB_DET_PORT, ENABLE);
+
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Pin = USB_DET_PIN;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+  GPIO_Init(USB_DET_PORT, &GPIO_InitStructure);
 }
 
+bool USBDevice_PlugIn()
+{
+  bool plugin = GPIO_ReadInputDataBit(USB_DET_PORT, USB_DET_PIN);
+  return plugin;
+}
 
 /*******************************************************************************
 * Function Name  : Enter_LowPowerMode
