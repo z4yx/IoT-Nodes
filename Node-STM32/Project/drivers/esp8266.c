@@ -28,7 +28,7 @@ static void RedirectUSBToESP8266(uint8_t* data_buffer, uint8_t Nb_bytes)
 
 static void gotResponse(char *token, char *param)
 {
-    DBG_MSG("[[%s]][[%s]]\n", token, param);
+    DBG_MSG("[[%s]][[%s]]", token, param);
     if(strcmp(token, "control") == 0)
         IoTNode_HandleControl(param);
     if(strcmp(token, "connected") == 0)
@@ -36,7 +36,6 @@ static void gotResponse(char *token, char *param)
     else if(strcmp(token, "offline") == 0)
         mqtt_connected = false;
     else if(strcmp(token, "wifi") == 0){
-        DBG_MSG("Wifi state: %s", param);
         if(*param == '5')
             wifi_connected = true;
     }else if(strcmp(token, "started") == 0)

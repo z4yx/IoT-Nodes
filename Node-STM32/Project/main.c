@@ -24,6 +24,7 @@ int main(void)
 
 	Init();
 
+	DBG_MSG("----- IoT-Node Power On -----");
 	ESP8266_Init(upgradeMode);
 
 	LED_GREEN(true);

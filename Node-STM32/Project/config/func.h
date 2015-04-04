@@ -2,7 +2,7 @@
 #define FUNC_H__
 
 
-#define ESP_DBG_CDC
+// #define ESP_DBG_CDC
 
 #define ROUTER_SSID      "IoT"
 #define ROUTER_PASSWD    "IoTController"
