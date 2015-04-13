@@ -4,6 +4,7 @@
 #include "bmp180.h"
 #include "dht.h"
 #include "sr501.h"
+#include "mq2.h"
 #include "board.h"
 #include "func.h"
 #include "systick.h"
@@ -147,7 +148,10 @@ static struct sensor_t sensor_mq2 = {
     .measure = sensor_mq2_measure,
 };
 
-struct sensor_t *sensors[] = {
+static struct sensor_t foo;
+
+static struct sensor_t *sensors_foo[] = {
+    &foo, //empty array is not allowed in MDK
 #ifdef ENABLE_BH1750
     &sensor_bh1750,
 #endif
@@ -166,6 +170,8 @@ struct sensor_t *sensors[] = {
 #endif
 };
 
-const int sensors_count = sizeof(sensors)/sizeof(struct sensor_t *);
+struct sensor_t **sensors = &sensors_foo[1]; //skip "foo"
+
+const int sensors_count = sizeof(sensors_foo)/sizeof(struct sensor_t *)-1;
 
 

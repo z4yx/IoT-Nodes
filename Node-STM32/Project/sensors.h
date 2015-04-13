@@ -29,6 +29,6 @@ struct sensor_t {
 };
 
 extern const int sensors_count;
-extern struct sensor_t *sensors[];
+extern struct sensor_t **sensors;
 
 #endif

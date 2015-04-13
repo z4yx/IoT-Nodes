@@ -23,11 +23,16 @@ static struct actuator_t actuator_switch = {
     .action = actuator_switch_action,
 };
 
-struct actuator_t *actuators[] = {
+static struct actuator_t foo;
+
+static struct actuator_t *actuators_foo[] = {
+    &foo, //empty array is not allowed in MDK
 #ifdef ENABLE_SWITCH
     &actuator_switch,
 #endif
 };
 
-const int actuators_count = sizeof(actuators)/sizeof(struct actuator_t *);
+struct actuator_t **actuators = &actuators_foo[1]; //skip "foo"
+
+const int actuators_count = sizeof(actuators_foo)/sizeof(struct actuator_t *)-1;
 

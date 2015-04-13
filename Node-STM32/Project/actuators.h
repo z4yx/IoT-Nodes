@@ -24,7 +24,7 @@ struct actuator_t {
     bool (*action)(struct actuator_t *);
 };
 
-extern struct actuator_t *actuators[];
+extern struct actuator_t **actuators;
 extern const int actuators_count;
 
 #endif

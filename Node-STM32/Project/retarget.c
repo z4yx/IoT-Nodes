@@ -1,6 +1,7 @@
 #include "usart.h"
 #include "common.h"
 
+#ifdef __GNUC__
 /* Retargeting functions for gcc-arm-embedded */
 
 int _write (int fd, char *ptr, int len)
@@ -29,3 +30,10 @@ void _ttywrch(int ch) {
    * Need implementing with UART here. */
   USART_putchar(USART_DBG, ch);
 }
+#else
+
+int fputc(int ch, FILE *f) {
+  USART_putchar(USART_DBG, ch);
+  return ch;
+}
+#endif
