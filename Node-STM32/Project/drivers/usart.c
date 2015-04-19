@@ -105,6 +105,15 @@ int USART_putchar(USART_TypeDef* USARTx, int ch)
     return (ch);
 }
 
+void USART_write(USART_TypeDef* USARTx, const uint8_t* data, int len)
+{
+    for (int i = 0; i < len; ++i)
+    {
+        USART_SendData(USARTx, (unsigned char) data[i]);
+        while (!(USARTx->SR & USART_FLAG_TXE));
+    }
+}
+
 /*
  * 通过串口接收一个字节
  */
