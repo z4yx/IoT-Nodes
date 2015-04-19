@@ -2,7 +2,7 @@
 #define BOARD_H__
 
 //===select a board here===
-#define BOARD_GAS
+#define BOARD_IR
 //=========================
 
 #if defined(BOARD_LIGHT_SENSOR)
@@ -28,6 +28,10 @@
 #elif defined(BOARD_GAS)
 
 #define ENABLE_MQ2
+
+#elif defined(BOARD_IR)
+
+#define ENABLE_IR
 
 #elif defined(BOARD_CUSTOM)
 

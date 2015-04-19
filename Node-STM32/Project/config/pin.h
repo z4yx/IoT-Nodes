@@ -34,6 +34,12 @@
 #define IR_RECV_PORT GPIOA
 #define IR_RECV_PIN  GPIO_Pin_0
 
+#define IRDA_PORT_IO        GPIOB
+#define IRDA_PORT_BUSY      GPIOA
+#define IRDA_SCL_PIN        GPIO_Pin_6
+#define IRDA_SDA_PIN        GPIO_Pin_7
+#define IRDA_BUSY_PIN       GPIO_Pin_5
+
 #define EEP24Cxx_PORT    GPIOB
 #define EEP24Cxx_SDA_PIN GPIO_Pin_7
 #define EEP24Cxx_SCL_PIN GPIO_Pin_6
