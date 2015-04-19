@@ -96,7 +96,7 @@ SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_USB-FS-Device_Driver/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_CPAL_Driver/devices/stm32f10x/*.c)
 SRC += $(wildcard $(SRC_DIR)usb/src/*.c)
-SRC += $(wildcard $(SRC_DIR)drivers/*.c)
+SRC += $(wildcard $(SRC_DIR)drivers/system/*.c)
 SRC += $(wildcard $(SRC_DIR)drivers/sensors/*.c)
 SRC += $(wildcard $(SRC_DIR)drivers/actuators/*.c)
 
@@ -162,7 +162,7 @@ EXTRAINCDIRS += ../../Libraries/STM32_USB-FS-Device_Driver/inc
 EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/inc 
 EXTRAINCDIRS += ../../Libraries/STM32_CPAL_Driver/devices/stm32f10x 
 EXTRAINCDIRS += ../usb/inc
-EXTRAINCDIRS += ../drivers
+EXTRAINCDIRS += ../drivers/system
 EXTRAINCDIRS += ../drivers/sensors
 EXTRAINCDIRS += ../drivers/actuators
 EXTRAINCDIRS += ../config
