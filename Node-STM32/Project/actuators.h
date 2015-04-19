@@ -7,6 +7,7 @@
 enum {ACTUATOR_VALUE_BOOL, ACTUATOR_VALUE_INT, ACTUATOR_VALUE_FLOAT};
 enum {
     ACTUATOR_FLAG_INITIALIZED = 1, 
+    ACTUATOR_FLAG_TRIGGER = 2,
 };
 union actuator_value_t{
     bool value_bool;

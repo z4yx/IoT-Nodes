@@ -166,7 +166,7 @@ static void doAction(char* ctrl)
             }
             if(fetchActuatorValue(a, plus+1, &changed)){
                 a->latest_update = GetSystemTick();
-                if(changed){
+                if(changed || (a->flags & ACTUATOR_FLAG_TRIGGER)){
                     a->action(a);
                 }
             }
