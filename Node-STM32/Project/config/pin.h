@@ -9,6 +9,8 @@
 #define RELAY_PIN   GPIO_Pin_0
 #define RELAY_ACTIVE_VAL   Bit_SET
 
+#define PN532_HSU_USART USART3
+
 #define BMP180_PORT    GPIOB
 #define BMP180_SDA_PIN GPIO_Pin_7
 #define BMP180_SCL_PIN GPIO_Pin_6
