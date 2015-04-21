@@ -20,21 +20,19 @@ static void PN532Reader_SetLedOn(bool on)
 
 bool PN532Reader_Init(void)
 {
-    DBG_MSG("Try begin");
     PN532_begin();
 
-    DBG_MSG("Try get ver");
     uint32_t versiondata = PN532_getFirmwareVersion();
     if (!versiondata) {
         ERR_MSG("PN53x not found!");
         return false;
     }
 
-    DBG_MSG("Found chip PN5%x with firmware ver. %d.%d",
-            (versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF, (versiondata >> 8) & 0xFF);
-
     PN532_setPassiveActivationRetries(0xFF);
     PN532_SAMConfig();
+
+    DBG_MSG("Found chip PN5%x with firmware ver. %d.%d",
+            (versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF, (versiondata >> 8) & 0xFF);
 
     return true;
 }
@@ -60,7 +58,7 @@ void PN532Reader_Poll(void)
     // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
     // 'uid' will be populated with the UID, and uidLength will indicate
     // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
-    success = PN532_readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength, 200, false);
+    success = PN532_readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength, 100, false);
     if (card == Card_14443A) {
         if (success) {
             //Card doesn't leave yet since last detected
@@ -100,7 +98,7 @@ void PN532Reader_Poll(void)
     }
 
     static uint8_t AFI[] = {0};
-    success = PN532_inListPassiveTarget(PN532_106KBPS_ISO14443B, sizeof(AFI) , AFI, 200);
+    success = PN532_inListPassiveTarget(PN532_106KBPS_ISO14443B, sizeof(AFI) , AFI, 100);
     if (success) {
         uint8_t cardId[3];
         uint8_t expire[3];

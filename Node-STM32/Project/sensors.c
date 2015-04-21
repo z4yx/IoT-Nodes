@@ -5,6 +5,7 @@
 #include "dht.h"
 #include "sr501.h"
 #include "mq2.h"
+#include "pn532Reader.h"
 #include "board.h"
 #include "func.h"
 #include "systick.h"
@@ -148,6 +149,28 @@ static struct sensor_t sensor_mq2 = {
     .measure = sensor_mq2_measure,
 };
 
+static bool sensor_pn532_init(struct sensor_t *s)
+{
+    s->value.value_string = NULL;
+    return PN532Reader_Init();
+}
+
+static bool sensor_pn532_measure(struct sensor_t *s)
+{
+    PN532Reader_Poll();
+    return PN532Reader_CardDetected(&s->value.value_string);
+}
+
+static struct sensor_t sensor_pn532 = {
+    .model = "pn532",
+    .input_name = "rfid",
+    .unit = "*",
+    .value_type = SENSOR_VALUE_STRING,
+    .sample_rate = 100, //ms
+    .driver_init = sensor_pn532_init,
+    .measure = sensor_pn532_measure,
+};
+
 static struct sensor_t foo;
 
 static struct sensor_t *sensors_foo[] = {
@@ -167,6 +190,9 @@ static struct sensor_t *sensors_foo[] = {
 #endif
 #ifdef ENABLE_MQ2
     &sensor_mq2,
+#endif
+#ifdef ENABLE_PN532
+    &sensor_pn532,
 #endif
 };
 

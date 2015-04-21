@@ -3,7 +3,7 @@
 #ifndef __PN532_INTERFACE_H__
 #define __PN532_INTERFACE_H__
 
-#include <stdint.h>
+#include "common.h"
 
 #define PN532_PREAMBLE                (0x00)
 #define PN532_STARTCODE1              (0x00)
@@ -24,8 +24,15 @@
                                       b = (b & 0xCC) >> 2 | (b & 0x33) << 2; \
                                       b = (b & 0xAA) >> 1 | (b & 0x55) << 1
 
-#define DMSG_HEX(x)                   printf("0x%02x",(x))
+#ifdef PN532_DEBUG
+#define PN532_DBG_MSG(...)            DBG_MSG(__VA_ARGS__)
+#define DMSG_HEX(x)                   printf("[0x%02x]",(x))
 #define DMSG_INT(x)                   printf("%d",(x))
+#else
+#define PN532_DBG_MSG(...)            ((void)(0))
+#define DMSG_INT(x)                   ((void)(0))
+#define DMSG_HEX(x)                   ((void)(0))
+#endif
 
 struct PN532Interface
 {

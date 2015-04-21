@@ -191,6 +191,11 @@ void USART2_IRQHandler(void)
   ESP8266_USART_IT_Handler();
 }
 
+void USART3_IRQHandler(void)
+{
+  PN532_USART_IT_Handler();
+}
+
 void TIM4_IRQHandler(void)
 {
   if(SET == TIM_GetITStatus(TIM4, TIM_IT_Update)) {

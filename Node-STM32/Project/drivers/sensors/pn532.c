@@ -219,9 +219,9 @@ bool PN532_writeGPIO(uint8_t pinstate)
     pn532_packetbuffer[1] = PN532_GPIO_VALIDATIONBIT | pinstate;  // P3 Pins
     pn532_packetbuffer[2] = 0x00;    // P7 GPIO Pins (not used ... taken by I2C)
 
-    DBG_MSG("Writing P3 GPIO: ");
+    PN532_DBG_MSG("Writing P3 GPIO: ");
     DMSG_HEX(pn532_packetbuffer[1]);
-    DBG_MSG("\n");
+    PN532_DBG_MSG("\n");
 
     // Send the WRITEGPIO command (0x0E)
     if (HAL(writeCommand)(pn532_packetbuffer, 3, 0, 0))
@@ -239,9 +239,9 @@ bool PN532_writeGPIOP7(uint8_t pinstate)
     pn532_packetbuffer[1] = 0x00;  // P3 Pins are not changed
     pn532_packetbuffer[2] = PN532_GPIO_VALIDATIONBIT | pinstate;  // P7 Pins
 
-    DBG_MSG("Writing P7 GPIO: ");
+    PN532_DBG_MSG("Writing P7 GPIO: ");
     DMSG_HEX(pn532_packetbuffer[1]);
-    DBG_MSG("\n");
+    PN532_DBG_MSG("\n");
 
     // Send the WRITEGPIO command (0x0E)
     if (HAL(writeCommand)(pn532_packetbuffer, 3, 0, 0))
@@ -284,10 +284,10 @@ uint8_t PN532_readGPIO(void)
     */
 
 
-    DBG_MSG("P3 GPIO: "); DMSG_HEX(pn532_packetbuffer[7]);
-    DBG_MSG("P7 GPIO: "); DMSG_HEX(pn532_packetbuffer[8]);
-    DBG_MSG("I0I1 GPIO: "); DMSG_HEX(pn532_packetbuffer[9]);
-    DBG_MSG("\n");
+    PN532_DBG_MSG("P3 GPIO: "); DMSG_HEX(pn532_packetbuffer[7]);
+    PN532_DBG_MSG("P7 GPIO: "); DMSG_HEX(pn532_packetbuffer[8]);
+    PN532_DBG_MSG("I0I1 GPIO: "); DMSG_HEX(pn532_packetbuffer[9]);
+    PN532_DBG_MSG("\n");
 
     return pn532_packetbuffer[0];
 }
@@ -303,8 +303,6 @@ bool PN532_SAMConfig(void)
     pn532_packetbuffer[1] = 0x01; // normal mode;
     pn532_packetbuffer[2] = 0x14; // timeout 50ms * 20 = 1 second
     pn532_packetbuffer[3] = 0x01; // use IRQ pin!
-
-    DBG_MSG("SAMConfig\n");
 
     if (HAL(writeCommand)(pn532_packetbuffer, 4, 0, 0))
         return false;
@@ -399,9 +397,9 @@ bool PN532_readPassiveTargetID(uint8_t cardbaudrate, uint8_t *uid, uint8_t *uidL
     sens_res <<= 8;
     sens_res |= pn532_packetbuffer[3];
 
-    DBG_MSG("ATQA: 0x");  DMSG_HEX(sens_res);
-    DBG_MSG("SAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
-    DBG_MSG("\n");
+    PN532_DBG_MSG("ATQA: 0x");  DMSG_HEX(sens_res);
+    PN532_DBG_MSG("SAK: 0x");  DMSG_HEX(pn532_packetbuffer[4]);
+    PN532_DBG_MSG("\n");
 
     /* Card appears to be Mifare Classic */
     *uidLength = pn532_packetbuffer[5];
@@ -497,7 +495,7 @@ uint8_t PN532_mifareclassic_AuthenticateBlock (uint8_t *uid, uint8_t uidLen, uin
     // for an auth success it should be bytes 5-7: 0xD5 0x41 0x00
     // Mifare auth error is technically byte 7: 0x14 but anything other and 0x00 is not good
     if (pn532_packetbuffer[0] != 0x00) {
-        DBG_MSG("Authentification failed\n");
+        PN532_DBG_MSG("Authentification failed\n");
         return 0;
     }
 
@@ -519,7 +517,7 @@ uint8_t PN532_mifareclassic_AuthenticateBlock (uint8_t *uid, uint8_t uidLen, uin
 /**************************************************************************/
 uint8_t PN532_mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t *data)
 {
-    DBG_MSG("Trying to read 16 bytes from block ");
+    PN532_DBG_MSG("Trying to read 16 bytes from block ");
     DMSG_INT(blockNumber);
 
     /* Prepare the command */
@@ -700,7 +698,7 @@ uint8_t PN532_mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIdent
 uint8_t PN532_mifareultralight_ReadPage (uint8_t page, uint8_t *buffer)
 {
     if (page >= 64) {
-        DBG_MSG("Page value out of range\n");
+        PN532_DBG_MSG("Page value out of range\n");
         return 0;
     }
 
@@ -790,7 +788,7 @@ bool PN532_inDataExchange(uint8_t *send, uint8_t sendLength, uint8_t *response, 
     }
 
     if ((response[0] & 0x3f) != 0) {
-        DBG_MSG("Status code indicates an error\n");
+        PN532_DBG_MSG("Status code indicates an error\n");
         return false;
     }
 
@@ -821,7 +819,7 @@ bool PN532_inListPassiveTarget(uint8_t cardbaudrate, uint8_t initiatorDataLen, u
     pn532_packetbuffer[1] = 1;
     pn532_packetbuffer[2] = cardbaudrate;
 
-    DBG_MSG("inList passive target\n");
+    PN532_DBG_MSG("inList passive target\n");
 
     if (HAL(writeCommand)(pn532_packetbuffer, 3, initiatorData, initiatorDataLen)) {
         return false;
@@ -867,7 +865,7 @@ bool PN532_inCommunicateThru(const uint8_t *send, uint8_t sendLength, uint8_t *r
     }
 
     if ((response[0] & 0x3f) != 0) {
-        DBG_MSG("Status code indicates an error\n");
+        PN532_DBG_MSG("Status code indicates an error\n");
         return false;
     }
 
@@ -981,7 +979,7 @@ int16_t PN532_tgGetData(uint8_t *buf, uint8_t len)
 
 
     if (buf[0] != 0) {
-        DBG_MSG("status is not ok\n");
+        PN532_DBG_MSG("status is not ok\n");
         return -5;
     }
 
@@ -996,7 +994,7 @@ bool PN532_tgSetData(const uint8_t *header, uint8_t hlen, const uint8_t *body, u
 {
     if (hlen > (sizeof(pn532_packetbuffer) - 1)) {
         if ((body != 0) || (header == pn532_packetbuffer)) {
-            DBG_MSG("tgSetData:buffer too small\n");
+            PN532_DBG_MSG("tgSetData:buffer too small\n");
             return false;
         }
 
@@ -1071,7 +1069,7 @@ static bool doReadTsighuaStuCard(uint8_t cardId[3], uint8_t expire[3], char stud
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_atqb, sizeof(cmd_atqb), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("ATQB returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("ATQB returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
 
     uint8_t cmd_attrib[] = {
         0x1d,
@@ -1083,13 +1081,13 @@ static bool doReadTsighuaStuCard(uint8_t cardId[3], uint8_t expire[3], char stud
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_attrib, sizeof(cmd_attrib), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("ATTRIB returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("ATTRIB returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
 
     static uint8_t cmd_cid[] = {0x0b, 0x00, 0x00, 0xb0, 0x95, 0x00, 0x0f, 0x5d, 0xd3};
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_cid, sizeof(cmd_cid), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("CMD-CID returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("CMD-CID returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
     for (int i = 0; i < 3; ++i) {
         cardId[i] = pn532_packetbuffer[9 + i];
     }
@@ -1101,19 +1099,19 @@ static bool doReadTsighuaStuCard(uint8_t cardId[3], uint8_t expire[3], char stud
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_2, sizeof(cmd_2), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("CMD-2 returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("CMD-2 returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
 
     static uint8_t cmd_3[] = {0x0a, 0x00, 0x00, 0xb0, 0x95, 0x00, 0x1e, 0x80, 0x4d};
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_3, sizeof(cmd_3), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("CMD-3 returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("CMD-3 returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
 
     static uint8_t cmd_sid[] = {0x0b, 0x00, 0x00, 0xb0, 0x96, 0x1c, 0x0a, 0xa5, 0x57};
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_sid, sizeof(cmd_sid), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("CMD-SID returned"); DMSG_INT(sz); DBG_MSG(" bytes\n");
+    PN532_DBG_MSG("CMD-SID returned"); DMSG_INT(sz); PN532_DBG_MSG(" bytes\n");
     for (int i = 0; i < 10; ++i) {
         studentId[i] = pn532_packetbuffer[2 + i];
     }
@@ -1128,7 +1126,7 @@ bool PN532_stuCardIsPresent()
     sz = sizeof(pn532_packetbuffer);
     if (!PN532_inCommunicateThru(cmd_3, sizeof(cmd_3), pn532_packetbuffer, &sz))
         return false;
-    DBG_MSG("CMD-3 returned %d bytes\n", sz);
+    PN532_DBG_MSG("CMD-3 returned %d bytes\n", sz);
     return true;
 }
 
@@ -1165,19 +1163,19 @@ static void ComputeCrc(uint8_t CRCType, uint8_t *Data, uint8_t Length, uint8_t *
 static void setPN532RegsForTypeB()
 {
     if (!PN532_readRegister(6, registerAddrForTypeB, registerValueBackup)) {
-        DBG_MSG("failed to backup registers for type B\n");
+        PN532_DBG_MSG("failed to backup registers for type B\n");
         return;
     }
     if (!PN532_readRegister(6, registerAddrForTypeB + 6, registerValueBackup + 6)) {
-        DBG_MSG("failed to backup registers for type B\n");
+        PN532_DBG_MSG("failed to backup registers for type B\n");
         return;
     }
     if (!PN532_writeRegister(6, registerAddrForTypeB, registerValueForTypeB)) {
-        DBG_MSG("failed to set registers for type B\n");
+        PN532_DBG_MSG("failed to set registers for type B\n");
         return;
     }
     if (!PN532_writeRegister(6, registerAddrForTypeB + 6, registerValueForTypeB + 6)) {
-        DBG_MSG("failed to set registers for type B\n");
+        PN532_DBG_MSG("failed to set registers for type B\n");
         return;
     }
 }
@@ -1185,11 +1183,11 @@ static void setPN532RegsForTypeB()
 static void restorePN532RegsForTypeB()
 {
     if (!PN532_writeRegister(6, registerAddrForTypeB, registerValueBackup)) {
-        DBG_MSG("failed to restore registers for type B\n");
+        PN532_DBG_MSG("failed to restore registers for type B\n");
         return;
     }
     if (!PN532_writeRegister(6, registerAddrForTypeB + 6, registerValueBackup + 6)) {
-        DBG_MSG("failed to restore registers for type B\n");
+        PN532_DBG_MSG("failed to restore registers for type B\n");
         return;
     }
 }

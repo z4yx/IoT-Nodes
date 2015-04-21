@@ -3,17 +3,51 @@
 #include "usart.h"
 #include "common.h"
 #include "systick.h"
+#include "circular_buffer.h"
 #include <string.h>
 
 static uint8_t command = 0;
+static struct CircularBuffer* serialBuf;
 
 static int8_t receive(uint8_t *buf, int len, uint16_t timeout);
 static int8_t readAckFrame(void);
 static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout);
 
+static int readByte(void)
+{
+    uint8_t b;
+    if(!CircularBuffer_Pop(serialBuf, &b))
+        return -1;
+    return b;
+}
+
+static void dumpBuf(void)
+{
+    if(CircularBuffer_Size(serialBuf)){
+        DBG_MSG("Dump serial buffer: ");
+        while(CircularBuffer_Size(serialBuf)){
+            uint8_t ret = readByte();
+            printf("%02x",ret);
+        }
+        printf("\n");
+    }
+}
+
+void PN532_USART_IT_Handler(void)
+{
+    if(USART_GetITStatus(PN532_HSU_USART, USART_IT_RXNE) != RESET){
+        uint8_t byte = USART_getchar(PN532_HSU_USART);
+        CircularBuffer_Push(serialBuf, byte);
+    }
+}
+
 static void begin()
 {
+    serialBuf = CircularBuffer_New(128);
+    if(!serialBuf)
+        return;
     USARTx_Config(PN532_HSU_USART,115200);
+    USART_RxInt_Config(true, PN532_HSU_USART, PN532_HSU_IRQ);
 }
 
 static void wakeup()
@@ -25,13 +59,7 @@ static void wakeup()
     USART_putchar(PN532_HSU_USART,0);
 
     /** dump serial buffer */
-    // if(_serial->available()){
-    //     DBG_MSG("Dump serial buffer: ");
-    // }
-    // while(_serial->available()){
-    //     uint8_t ret = _serial->read();
-    //     DMSG_HEX(ret);
-    // }
+    dumpBuf();
 
 }
 
@@ -39,13 +67,7 @@ static int8_t writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t *b
 {
 
     /** dump serial buffer */
-    // if(_serial->available()){
-    //     DBG_MSG("Dump serial buffer: ");
-    // }
-    // while(_serial->available()){
-    //     uint8_t ret = _serial->read();
-    //     DMSG_HEX(ret);
-    // }
+    dumpBuf();
 
     command = header[0];
     
@@ -60,20 +82,20 @@ static int8_t writeCommand(const uint8_t *header, uint8_t hlen, const uint8_t *b
     USART_putchar(PN532_HSU_USART,PN532_HOSTTOPN532);
     uint8_t sum = PN532_HOSTTOPN532;    // sum of TFI + DATA
 
-    DBG_MSG("\nWrite: ");
+    // DBG_MSG("Write: ");
     
     USART_write(PN532_HSU_USART,header, hlen);
     for (uint8_t i = 0; i < hlen; i++) {
         sum += header[i];
 
-        DMSG_HEX(header[i]);
+        // DMSG_HEX(header[i]);
     }
 
     USART_write(PN532_HSU_USART,body, blen);
     for (uint8_t i = 0; i < blen; i++) {
         sum += body[i];
 
-        DMSG_HEX(body[i]);
+        // DMSG_HEX(body[i]);
     }
     
     uint8_t checksum = ~sum + 1;            // checksum of TFI + DATA
@@ -87,7 +109,7 @@ static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
 {
     uint8_t tmp[3];
     
-    DBG_MSG("\nRead:  ");
+    // DBG_MSG("Read:  ");
     
     /** Frame Preamble and Start Code */
     if(receive(tmp, 3, timeout)<=0){
@@ -147,15 +169,15 @@ static int8_t readAckFrame()
     const uint8_t PN532_ACK[] = {0, 0, 0xFF, 0, 0xFF, 0};
     uint8_t ackBuf[sizeof(PN532_ACK)];
     
-    DBG_MSG("\nAck: ");
+    // DBG_MSG("Ack: ");
     
     if( receive(ackBuf, sizeof(PN532_ACK), PN532_ACK_WAIT_TIME) <= 0 ){
-        DBG_MSG("Timeout\n");
+        DBG_MSG("ACK Timeout");
         return PN532_TIMEOUT;
     }
     
     if( memcmp(ackBuf, PN532_ACK, sizeof(PN532_ACK)) ){
-        DBG_MSG("Invalid\n");
+        DBG_MSG("ACK Invalid");
         return PN532_INVALID_ACK;
     }
     return 0;
@@ -177,7 +199,7 @@ static int8_t receive(uint8_t *buf, int len, uint16_t timeout)
   while (read_bytes < len) {
     start_millis = GetSystemTick();
     do {
-      ret = USART_getchar(PN532_HSU_USART);
+      ret = readByte();
       if (ret >= 0) {
         break;
      }
@@ -191,7 +213,7 @@ static int8_t receive(uint8_t *buf, int len, uint16_t timeout)
         }
     }
     buf[read_bytes] = (uint8_t)ret;
-    DMSG_HEX(ret);
+    // DMSG_HEX(ret);
     read_bytes++;
   }
   return read_bytes;

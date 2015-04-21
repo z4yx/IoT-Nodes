@@ -2,7 +2,7 @@
 #define BOARD_H__
 
 //===select a board here===
-#define BOARD_IR
+#define BOARD_RFID
 //=========================
 
 #if defined(BOARD_LIGHT_SENSOR)
@@ -32,6 +32,10 @@
 #elif defined(BOARD_IR)
 
 #define ENABLE_IR
+
+#elif defined(BOARD_RFID)
+
+#define ENABLE_PN532
 
 #elif defined(BOARD_CUSTOM)
 
