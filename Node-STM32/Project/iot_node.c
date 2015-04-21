@@ -80,9 +80,9 @@ static void updateMeasurement()
                 publishMeasurement(sensors[i]);
             }
         } else {
-            ERR_MSG("Measuring %s on %s failed",
-                    sensors[i]->input_name,
-                    sensors[i]->model);
+            // ERR_MSG("Measuring %s on %s failed",
+            //         sensors[i]->input_name,
+            //         sensors[i]->model);
         }
     }
 }
