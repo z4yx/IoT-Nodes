@@ -3,7 +3,7 @@
 
 #include "systick.h"
 
-enum {SENSOR_VALUE_INT, SENSOR_VALUE_FLOAT, SENSOR_VALUE_BOOL};
+enum {SENSOR_VALUE_INT, SENSOR_VALUE_FLOAT, SENSOR_VALUE_BOOL, SENSOR_VALUE_STRING};
 enum {
     SENSOR_FLAG_INITIALIZED = 1, 
     SENSOR_PUBLISH_CHANGES_ONLY = 2,
@@ -13,6 +13,7 @@ union sensor_value_t{
     int value_int;
     float value_float;
     bool value_bool;
+    char* value_string;
 };
 struct sensor_t {
     char model[8];

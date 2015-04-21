@@ -37,6 +37,7 @@ static void initActuators()
 static void publishMeasurement(struct sensor_t *s)
 {
     static char value_buf[16];
+    char* pvalue = value_buf;
     if(!ESP8266_IsMqttConnected())
         return;
     if (s->value_type == SENSOR_VALUE_INT)
@@ -51,12 +52,14 @@ static void publishMeasurement(struct sensor_t *s)
         snprintf(value_buf, sizeof(value_buf), "%s %s",
                  s->value.value_bool ? "true" : "false",
                  s->unit);
+    else if (s->value_type == SENSOR_VALUE_STRING)
+        pvalue = s->value.value_string;
     else {
         ERR_MSG("Unknown value type of %s", s->model);
         return;
     }
-    DBG_MSG("%s-%s: %s", s->model, s->input_name, value_buf);
-    ESP8266_MqttPublishValue(s->input_name, value_buf);
+    DBG_MSG("%s-%s: %s", s->model, s->input_name, pvalue);
+    ESP8266_MqttPublishValue(s->input_name, pvalue);
 }
 
 static void updateMeasurement()
