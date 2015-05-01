@@ -58,7 +58,7 @@ TCHAIN = arm-none-eabi
 
 # MCU name and submodel
 MCU      = cortex-m3
-SUBMDL   = stm32f10x_hd
+SUBMDL   = stm32f10x_md
 
 STM32LIB_CHIP_TYPE = $(shell echo $(SUBMDL) | tr a-z A-Z)
 
@@ -140,7 +140,7 @@ FLASH_TOOL = LMIFLASH
 # 0 = turn off optimization. s = optimize for size.
 # (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
 # OPT = s
-OPT = s
+OPT = 0
 
 # Debugging format.
 # Native formats for AVR-GCC's -g are stabs [default], or dwarf-2.
