@@ -1,7 +1,7 @@
 #include "actuators.h"
 #include "common.h"
 #include "switch.h"
-#include "irda.h"
+#include "ir.h"
 #include "board.h"
 #include "func.h"
 
@@ -26,31 +26,21 @@ static struct actuator_t actuator_switch = {
 
 static bool actuator_IR_init(struct actuator_t* a)
 {
-    IRDA_INIT(); 
+    IR_Init(); 
     return true;
 }
 
 static bool actuator_IR_action(struct actuator_t* a)
 {
-    static czx_vu8 irda_data[112];
+    bool ret;
     int val = a->value.value_int;
     if(val < 0){ //negative number indicates learning
         val = - val;
-        DBG_MSG("Learn signal %d", val);
-
-        IRDA_learn_start();
-        while(!IRDA_BUSY_S());
-        DBG_MSG("busy high");
-        u8 len = IRDA_learn_data_in_out(irda_data);
-        DBG_MSG("End learn len=%d", len);
+        ret = IR_StartLearning(val);
     }else if(val > 0){
-        DBG_MSG("Emit signal %d", val);
-
-        DBG_MSG("Start tx");
-        IRDA_tx_data(irda_data,sizeof(irda_data));
-        DBG_MSG("End tx");
+        ret = IR_Emit(val);
     }
-    return true;
+    return ret;
 }
 
 static struct actuator_t actuator_IR = {
