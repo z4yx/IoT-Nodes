@@ -116,6 +116,7 @@ static void initNetwork(void)
     Chip_GetUniqueID(id);
     snprintf(name_buf, sizeof(name_buf),
              "IoT_%08x%08x%08x", id[0], id[1], id[2]);
+    DBG_MSG("Node name: %s", name_buf);
     ESP8266_InitMqtt(name_buf);
     ESP8266_MqttConnect(MQTT_BROKER_IP, MQTT_BROKER_PORT);
     while (!ESP8266_IsMqttConnected());
@@ -253,5 +254,11 @@ void IoTNode_Begin()
             control_buf[0] = '\0';
         }
         updateMeasurement();
+        if(!ESP8266_IsMqttConnected()){
+            //Connection lost
+            ERR_MSG("Connection Lost");
+            ESP8266_Restart();
+            initNetwork();
+        }
     }
 }
