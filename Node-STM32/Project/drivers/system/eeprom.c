@@ -2,7 +2,6 @@
 #include "eeprom.h"
 #include <string.h>
 
-#define FLASH_BASE 0x08000000
 #if defined(STM32F10X_HD)
 #define PAGE_SIZE 2048
 #elif defined(STM32F10X_MD) || defined(STM32F10X_LD)
