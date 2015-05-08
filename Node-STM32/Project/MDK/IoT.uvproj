@@ -737,6 +737,16 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\sensors\pn532Reader.c</FilePath>
             </File>
+            <File>
+              <FileName>ir.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\actuators\ir.c</FilePath>
+            </File>
+            <File>
+              <FileName>eeprom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\system\eeprom.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
