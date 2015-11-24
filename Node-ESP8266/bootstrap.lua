@@ -30,7 +30,7 @@ m:on("message",function(conn,topic,data)
   next_file()
 end)
 -- _,_,gw=wifi.sta.getip()
-gw='192.168.1.2'
+gw='tdxls-iot.xicp.net'
 m:connect(gw, 1883, 0, function(conn) 
   m:subscribe("/bootstrap/list", 2)
 end)

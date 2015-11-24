@@ -1,5 +1,5 @@
 #!/bin/bash
-BROKER=192.168.1.2
+BROKER=tdxls-iot.xicp.net
 
 mosquitto_pub -h $BROKER -t /bootstrap/script -f bootstrap.lua -r
 mosquitto_pub -h $BROKER -t /bootstrap/list -m "`ls *.lua`" -r
