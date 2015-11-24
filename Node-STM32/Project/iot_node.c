@@ -107,17 +107,16 @@ static void initNetwork(void)
             tmr = GetSystemTick();
         }
     }
+    ESP8266_SetWiFiCredentials();
     DBG_MSG("ESP8266 started");
     do {
         ESP8266_CheckWifiState();
         Delay_ms(1000);
     } while (!ESP8266_IsWifiConnected());
+    LED_GREEN(true);
 
     Chip_GetUniqueID(id);
-    snprintf(name_buf, sizeof(name_buf),
-             "IoT_%08x%08x%08x", id[0], id[1], id[2]);
-    DBG_MSG("Node name: %s", name_buf);
-    ESP8266_InitMqtt(name_buf);
+    ESP8266_InitMqttWithChipID();
     ESP8266_MqttConnect(MQTT_BROKER_IP, MQTT_BROKER_PORT);
     while (!ESP8266_IsMqttConnected());
     DBG_MSG("MQTT connected");

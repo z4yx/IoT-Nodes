@@ -146,6 +146,13 @@ void ESP8266_InitMqtt(char *name)
     ESP8266_LUA_CMD("c=require('comm');c.init('%s')", name);
 }
 
+void ESP8266_InitMqttWithChipID()
+{
+    ESP8266_LUA_CMD("c=require('comm');");
+    Delay_ms(50);
+    ESP8266_LUA_CMD("c.init('i_' .. node.chipid())");
+}
+
 void ESP8266_MqttConnect(char *ip, int port)
 {
     //connect is async
@@ -187,11 +194,17 @@ bool ESP8266_CheckLuaScripts(void)
     return last_cmd_result;
 }
 
+void ESP8266_SetWiFiCredentials(void)
+{
+    ESP8266_LUA_CMD("wifi.sta.config([[%s]],[[%s]])", ROUTER_SSID, ROUTER_PASSWD);
+}
+
 void ESP8266_InitializeLuaScripts(void)
 {
     // ESP8266_LUA_CMD("file.remove('init.lua')");
     // Delay_ms(200); //Extra delay for flash
-    ESP8266_LUA_CMD("wifi.setmode(wifi.STATION);wifi.sta.config([[%s]],[[%s]])", ROUTER_SSID, ROUTER_PASSWD);
+    ESP8266_LUA_CMD("wifi.setmode(wifi.STATION)");
+    ESP8266_SetWiFiCredentials();
     Delay_ms(200); //Extra delay for flash
     ESP8266_LUA_CMD("wifi.sta.autoconnect(1)");
     do {

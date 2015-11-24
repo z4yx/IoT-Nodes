@@ -27,8 +27,6 @@ int main(void)
 	DBG_MSG("----- IoT-Node Power On -----");
 	ESP8266_Init(upgradeMode);
 
-	LED_GREEN(true);
-
 #if defined(ESP_DBG_CDC)
 	if(USBDevice_PlugIn())
 #else
