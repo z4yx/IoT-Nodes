@@ -4,8 +4,8 @@
 
 // #define ESP_DBG_CDC
 
-#define ROUTER_SSID      "IoT"
-#define ROUTER_PASSWD    "IoTController"
+#define ROUTER_SSID      "IoT"               //WiFi名称
+#define ROUTER_PASSWD    "IoTController"     //WiFi密码
 
 #define MQTT_BROKER_IP   "tdxls-iot.xicp.net"
 #define MQTT_BROKER_PORT 1883

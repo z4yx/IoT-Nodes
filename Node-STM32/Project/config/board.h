@@ -1,7 +1,7 @@
 #ifndef BOARD_H__
 #define BOARD_H__
 
-//===select a board here===
+//===修改这个定义来选择外设===
 #define BOARD_RELAY
 //=========================
 
