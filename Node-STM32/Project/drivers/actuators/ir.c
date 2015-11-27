@@ -56,7 +56,12 @@ bool IR_StartLearning(uint8_t channel)
         return false;
 
     IRDA_learn_start();
-    while(!IRDA_BUSY_S());
+    while(!IRDA_BUSY_S()){
+        LED_BLUE(false);
+        Delay_ms(200);
+        LED_BLUE(true);
+        Delay_ms(200);
+    }
     u8 len = IRDA_learn_data_in_out(irda_data);
     DBG_MSG("Learned, length=%d", len);
     if(!len)
