@@ -2,6 +2,7 @@
 #include "common.h"
 #include "switch.h"
 #include "ir.h"
+#include "pwm.h"
 #include "board.h"
 #include "func.h"
 #include <stdlib.h>
@@ -56,6 +57,31 @@ static struct actuator_t actuator_IR = {
     .action = actuator_IR_action,
 };
 
+static bool actuator_pwm_init(struct actuator_t* a)
+{
+    PWM_Init(PWM_FREQ_HERTZ);
+    return true;
+}
+
+static bool actuator_pwm_action(struct actuator_t* a)
+{
+    if(a->value.value_int < 0 || a->value.value_int > 100)
+        return false;
+    PWM_Channel(
+        PWM_OUT_CH,
+        a->value.value_int,
+        a->value.value_int > 0
+    );
+    return true;
+}
+
+static struct actuator_t actuator_PWM = {
+    .actuator_name = "PWM",
+    .value_type = ACTUATOR_VALUE_INT,
+    .driver_init = actuator_pwm_init,
+    .action = actuator_pwm_action,
+};
+
 static struct actuator_t foo;
 
 static struct actuator_t *actuators_foo[] = {
@@ -65,6 +91,9 @@ static struct actuator_t *actuators_foo[] = {
 #endif
 #ifdef ENABLE_IR
     &actuator_IR,
+#endif
+#ifdef ENABLE_PWM
+    &actuator_PWM,
 #endif
 };
 

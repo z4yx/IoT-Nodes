@@ -20,6 +20,7 @@
  
 void RCC_GPIOClockCmd(GPIO_TypeDef* GPIOx, FunctionalState state);
 void RCC_USARTClockCmd(USART_TypeDef* USARTx, FunctionalState state);
+void RCC_TIMClockCmd(TIM_TypeDef* TIMx, FunctionalState NewState);
 void Chip_GetUniqueID(uint32_t ChipUniqueID[3]);
 void Timer_16bit_Calc(int freq, uint16_t *period, uint16_t *prescaler);
 

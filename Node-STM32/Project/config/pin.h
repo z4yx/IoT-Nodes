@@ -9,6 +9,12 @@
 #define RELAY_PINS   {GPIO_Pin_0, GPIO_Pin_10, GPIO_Pin_11}
 #define RELAY_ACTIVE_VAL   Bit_SET
 
+#define PWM_OUT_PORT   GPIOA
+#define PWM_OUT_PIN    GPIO_Pin_7
+#define PWM_OUT_TIM    TIM3
+#define PWM_OUT_CH     2
+#define PWM_FREQ_HERTZ 50 
+
 #define PN532_HSU_USART USART3
 #define PN532_HSU_IRQ   USART3_IRQn
 

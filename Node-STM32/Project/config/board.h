@@ -21,6 +21,10 @@
 
 #define ENABLE_SWITCH
 
+#elif defined(BOARD_PWM)  //选择PWM输出，舵机、功率控制等
+
+#define ENABLE_PWM
+
 #elif defined(BOARD_PYROELECTRICITY)  //选择热释电传感器
 
 #define ENABLE_SR501

@@ -747,6 +747,11 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\system\eeprom.c</FilePath>
             </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\actuators\pwm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
