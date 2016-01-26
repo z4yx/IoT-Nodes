@@ -5,8 +5,8 @@
 //All sensors with i2c interface should be connected to I2C1
 #define I2C_HOST_DEV I2C1_DevStructure
 
-#define RELAY_PORT  GPIOA
-#define RELAY_PIN   GPIO_Pin_0
+#define RELAY_PORTS  {GPIOA, GPIOB, GPIOB}
+#define RELAY_PINS   {GPIO_Pin_0, GPIO_Pin_10, GPIO_Pin_11}
 #define RELAY_ACTIVE_VAL   Bit_SET
 
 #define PN532_HSU_USART USART3

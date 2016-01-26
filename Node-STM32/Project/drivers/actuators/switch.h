@@ -3,6 +3,7 @@
 
 void Switch_Config(void);
 void Switch_Action(bool isON);
+void Switch_ChannelAction(int channel, bool isON);
 
 
 

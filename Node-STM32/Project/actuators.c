@@ -4,6 +4,7 @@
 #include "ir.h"
 #include "board.h"
 #include "func.h"
+#include <stdlib.h>
 
 static bool actuator_switch_init(struct actuator_t* a)
 {
@@ -13,13 +14,17 @@ static bool actuator_switch_init(struct actuator_t* a)
 
 static bool actuator_switch_action(struct actuator_t* a)
 {
-    Switch_Action(a->value.value_bool);
+    Switch_ChannelAction(
+        abs(a->value.value_int),
+        a->value.value_int > 0
+    );
     return true;
 }
 
 static struct actuator_t actuator_switch = {
     .actuator_name = "switch",
-    .value_type = ACTUATOR_VALUE_BOOL,
+    .value_type = ACTUATOR_VALUE_INT,
+    .flags = ACTUATOR_FLAG_TRIGGER,
     .driver_init = actuator_switch_init,
     .action = actuator_switch_action,
 };
