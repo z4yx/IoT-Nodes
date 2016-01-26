@@ -31,10 +31,11 @@ void Switch_Action(bool isON)
 }
 void Switch_ChannelAction(int channel, bool isON)
 {
-    if(channel >= ARRAY_SIZE(switchPorts)){
+    if(channel <= 0 || channel > ARRAY_SIZE(switchPorts)){
         ERR_MSG("channel out of bounds");
         return;
     }
+    channel--;
     GPIO_WriteBit(switchPorts[channel], switchPins[channel], 
         isON ? RELAY_ACTIVE_VAL : (RELAY_ACTIVE_VAL^1));
     DBG_MSG("isON[%d]: %u", channel, isON);
