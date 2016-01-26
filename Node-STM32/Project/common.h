@@ -5,17 +5,7 @@
 #include "pin.h"
 #include <stdint.h>
 #include <stdio.h>
-
-#ifndef NULL
-#define NULL ((void*)0)
-#endif
-#ifndef bool
-#define bool uint8_t
-#define true 1
-#define TRUE true
-#define false 0
-#define FALSE false
-#endif
+#include <stdbool.h>
 
 #define ARRAY_SIZE(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 
