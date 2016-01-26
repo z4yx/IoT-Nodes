@@ -126,6 +126,12 @@ int USART_getchar(USART_TypeDef* USARTx)
     return (ch);
 }
 
+unsigned char USART_available(USART_TypeDef* USARTx)
+{
+    return USART_GetFlagStatus(USARTx, USART_FLAG_RXNE) == SET;
+}
+
+
 /*
  * 通过串口发送一个字符串并换行
  */

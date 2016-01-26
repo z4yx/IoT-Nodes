@@ -41,6 +41,10 @@
 
 #define ENABLE_PN532
 
+#elif defined(BOARD_POWER_METER)  //选择电功率表
+
+#define ENABLE_LT211
+
 #elif defined(BOARD_CUSTOM)  //自定义传感器、执行器
 
 #define ENABLE_DHT11
