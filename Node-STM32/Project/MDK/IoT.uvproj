@@ -752,6 +752,11 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\actuators\pwm.c</FilePath>
             </File>
+            <File>
+              <FileName>lt211.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\sensors\lt211.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
