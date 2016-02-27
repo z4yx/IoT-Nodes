@@ -1,6 +1,7 @@
 #include "common.h"
 #include "sensors.h"
 #include "bh1750.h"
+#include "tsl2561.h"
 #include "bmp180.h"
 #include "dht.h"
 #include "sr501.h"
@@ -31,6 +32,30 @@ static struct sensor_t sensor_bh1750 = {
     .sample_rate = 5000, //ms
     .driver_init = sensor_bh1750_init,
     .measure = sensor_bh1750_measure,
+};
+
+static bool sensor_tsl2561_init(struct sensor_t *s)
+{
+    return TSL2561_begin();
+}
+
+static bool sensor_tsl2561_measure(struct sensor_t *s)
+{
+    s->value.value_int = TSL2561_calculateLux(
+        TSL2561_getLuminosity(0),
+        TSL2561_getLuminosity(1)
+        );
+    return true;
+}
+
+static struct sensor_t sensor_tsl2561 = {
+    .model = "tsl2561",
+    .input_name = "illuminance",
+    .unit = "lx",
+    .value_type = SENSOR_VALUE_INT,
+    .sample_rate = 5000, //ms
+    .driver_init = sensor_tsl2561_init,
+    .measure = sensor_tsl2561_measure,
 };
 
 static bool sensor_dht_init(struct sensor_t *s)
@@ -243,6 +268,9 @@ static struct sensor_t *sensors_foo[] = {
     &foo, //empty array is not allowed in MDK
 #ifdef ENABLE_BH1750
     &sensor_bh1750,
+#endif
+#ifdef ENABLE_TSL2561
+    &sensor_tsl2561,
 #endif
 #ifdef ENABLE_DHT11
     &sensor_dht_temp,

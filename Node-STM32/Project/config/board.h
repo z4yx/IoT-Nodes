@@ -5,6 +5,9 @@
 //选择光线传感器
 #define ENABLE_BH1750
 
+//选择光线传感器
+// #define ENABLE_TSL2561
+
 //选择湿度传感器
 // #define ENABLE_DHT11
 
