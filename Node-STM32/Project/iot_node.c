@@ -192,7 +192,7 @@ void reportNodeInfo(void)
         strcat(capability, sensors[i]->input_name);
         strcat(capability, ",");
         strcat(capability, sensors[i]->unit);
-        strcat(capability, "\n");
+        strcat(capability, "\\n");
     }
     if(capability[0] != '\0'){
         ESP8266_ReportCapability("values", capability);

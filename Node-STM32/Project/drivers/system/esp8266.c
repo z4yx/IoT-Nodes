@@ -176,7 +176,7 @@ void ESP8266_MqttPublishEvent(char *key, char *value)
 
 void ESP8266_ReportCapability(char *type, char *value)
 {
-    ESP8266_LUA_CMD("c.publish('capability',[[%s]],[[%s]],1,1)", type, value);
+    ESP8266_LUA_CMD("c.publish('capability','%s','%s',1,1)", type, value);
 }
 
 void ESP8266_Restart(void)
