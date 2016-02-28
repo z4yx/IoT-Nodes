@@ -65,9 +65,9 @@ static bool actuator_pwm_init(struct actuator_t* a)
 
 static bool actuator_pwm_action(struct actuator_t* a)
 {
-    if(a->value.value_int < 0 || a->value.value_int > 100)
+    if(a->value.value_int < 0 || a->value.value_int > 10000)
         return false;
-    PWM_Channel(
+    PWM_Channel_Precise(
         PWM_OUT_CH,
         a->value.value_int,
         a->value.value_int > 0
@@ -77,7 +77,7 @@ static bool actuator_pwm_action(struct actuator_t* a)
 
 static struct actuator_t actuator_PWM = {
     .actuator_name = "PWM",
-    .value_type = ACTUATOR_VALUE_INT,
+    .value_type = ACTUATOR_VALUE_INT, // duty cycle, *0.01%
     .driver_init = actuator_pwm_init,
     .action = actuator_pwm_action,
 };

@@ -96,13 +96,21 @@ void PWM_Init(int freq)
 }
 
 /*
- * 设置指定PWM通道的占空比(%)和输出状态
+ * 设置指定PWM通道的占空比(单位0.01%)和输出状态
  */
-void PWM_Channel(int channel, int percent, uint8_t bEnabled)
+void PWM_Channel_Precise(int channel, int percent_100, uint8_t bEnabled)
 {
-    int pulse = ((currentPeriod+1)*percent/100) - 1;
+    int pulse = ((currentPeriod+1)*percent_100/10000);
     if(pulse < 0)
         pulse = 0;
     TIMx_OCx_Config(PWM_OUT_TIM, channel, pulse, (bEnabled ? ENABLE : DISABLE));
     PWM_Output_Config(bEnabled);
+}
+
+/*
+ * 设置指定PWM通道的占空比(%)和输出状态
+ */
+void PWM_Channel(int channel, int percent, uint8_t bEnabled)
+{
+    PWM_Channel_Precise(channel, percent*100, bEnabled);
 }
