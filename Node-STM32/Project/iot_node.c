@@ -222,7 +222,7 @@ void reportNodeInfo(void)
             break;
         }
         strcat(capability, ctrl_type);
-        strcat(capability, "\n");
+        strcat(capability, "\\n");
     }
     if(capability[0] != '\0'){
         ESP8266_ReportCapability("control", capability);
