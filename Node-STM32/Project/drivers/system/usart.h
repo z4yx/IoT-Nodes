@@ -12,5 +12,6 @@ unsigned char USART_available(USART_TypeDef* USARTx);
 void USART_write(USART_TypeDef* USARTx, const uint8_t* data, int len);
 void USART_puts(USART_TypeDef* USARTx, char *str);
 void USART_printf(USART_TypeDef* USARTx, char *Data, ...);
+void USART_waitTransmit(USART_TypeDef* USARTx);
 
 #endif

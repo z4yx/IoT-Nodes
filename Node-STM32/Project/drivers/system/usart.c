@@ -76,6 +76,7 @@ void USARTx_Config(USART_TypeDef* USARTx, u32 USART_BaudRate)
     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     USART_Init(USARTx, &USART_InitStructure);
     USART_Cmd(USARTx, ENABLE);
+    USART_ClearFlag(USARTx, USART_FLAG_TC);
 }
 
 /*
@@ -103,6 +104,11 @@ int USART_putchar(USART_TypeDef* USARTx, int ch)
     while (!(USARTx->SR & USART_FLAG_TXE));
 
     return (ch);
+}
+
+void USART_waitTransmit(USART_TypeDef* USARTx)
+{
+    while (!(USARTx->SR & USART_FLAG_TC));
 }
 
 void USART_write(USART_TypeDef* USARTx, const uint8_t* data, int len)

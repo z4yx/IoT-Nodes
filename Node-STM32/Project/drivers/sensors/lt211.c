@@ -3,6 +3,7 @@
 #include "systick.h"
 
 static uint16_t crc;
+static bool initialized;
 
 // Compute the MODBUS RTU CRC
 static void updateCRC(uint8_t byte)
@@ -13,10 +14,13 @@ static void updateCRC(uint8_t byte)
     for (int i = 8; i != 0; i--) {    // Loop over each bit
         if ((crc & 0x0001) != 0) {      // If the LSB is set
             crc >>= 1;                    // Shift right and XOR 0xA001
+            crc &= 0x7fff;
             crc ^= 0xA001;
         }
-        else                            // Else LSB is not set
+        else {                           // Else LSB is not set
             crc >>= 1;                    // Just shift right
+            crc &= 0x7fff;
+        }
     }
   // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
 }
@@ -25,12 +29,14 @@ static void LT211_sendbyte_CRC(uint8_t byte)
 {
     USART_putchar(LT211_USART, byte);
     updateCRC(byte);
+    // DBG_MSG("crc=0x%x", crc);
 }
 
 static void LT211_sendCRC()
 {
-    USART_putchar(LT211_USART, (crc>>8)&0xff);
+    // DBG_MSG("CRC: 0x%x", crc);
     USART_putchar(LT211_USART, crc&0xff);
+    USART_putchar(LT211_USART, (crc>>8)&0xff);
 }
 
 static void LT211_resetCRC(void)
@@ -72,6 +78,8 @@ static bool LT211_readRegister16(uint16_t reg, uint16_t* value)
 {
     uint8_t buf[7];
     LT211_resetCRC();
+    GPIO_SetBits(LT211_TXE_PORT, LT211_TXE_PIN);
+    Delay_us(1000);
     LT211_sendbyte_CRC(LT211_ADDR);
     LT211_sendbyte_CRC(3); //Func code: Read Holding Registers
     LT211_sendbyte_CRC(reg>>8);
@@ -79,6 +87,9 @@ static bool LT211_readRegister16(uint16_t reg, uint16_t* value)
     LT211_sendbyte_CRC(0);
     LT211_sendbyte_CRC(1);
     LT211_sendCRC();
+    USART_waitTransmit(LT211_USART);
+    Delay_us(1000);
+    GPIO_ResetBits(LT211_TXE_PORT, LT211_TXE_PIN);
     if(LT211_receive(buf, 7, 500) < 7){
         ERR_MSG("Timeout");
         return false;
@@ -92,7 +103,7 @@ static bool LT211_readRegister16(uint16_t reg, uint16_t* value)
     {
         updateCRC(buf[i]);
     }
-    if(crc != ((uint16_t)buf[5]<<8 | buf[6])){
+    if(crc != ((uint16_t)buf[6]<<8 | buf[5])){
         ERR_MSG("Wrong CRC");
         return false;
     }
@@ -103,11 +114,21 @@ static bool LT211_readRegister16(uint16_t reg, uint16_t* value)
 bool LT211_Init(void)
 {
     uint16_t id;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    if(initialized)
+        return true;
+    RCC_GPIOClockCmd(LT211_TXE_PORT, ENABLE);
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Pin = LT211_TXE_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(LT211_TXE_PORT, &GPIO_InitStructure);
+    GPIO_ResetBits(LT211_TXE_PORT, LT211_TXE_PIN);
     USARTx_Config(LT211_USART, LT211_BAUD);
     if(!LT211_readRegister16(0x00, &id))
         return false;
-    DBG_MSG("LT211 model %d", id);
-    return id == 9000;
+    DBG_MSG("LT211 model 0x%x", id);
+    initialized = (id == 0x211);
+    return initialized;
 }
 
 bool LT211_ReadValueF(float* value, uint8_t type)
