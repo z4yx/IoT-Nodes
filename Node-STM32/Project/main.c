@@ -24,6 +24,8 @@ int main(void)
 
 	Init();
 
+	Delay_ms(200);
+
 	DBG_MSG("----- IoT-Node Power On -----");
 	ESP8266_Init(upgradeMode);
 
