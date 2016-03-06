@@ -2,7 +2,7 @@
 #define MQ2_H__
 
 void MQ2_Init();
-int MQ2_Read();
+float MQ2_Read();
 
 
 #endif

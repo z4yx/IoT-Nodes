@@ -29,6 +29,9 @@
 //选择红外遥控
 // #define ENABLE_IR
 
+//选择通用模拟量传感器（雨水、土壤湿度）
+#define ENABLE_ANALOG
+
 //选择射频卡读卡器
 // #define ENABLE_PN532
 

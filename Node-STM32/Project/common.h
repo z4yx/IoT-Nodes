@@ -18,6 +18,8 @@
 #define DBG_MSG(format, ...) printf("[Debug]%s: " format "\r\n", __func__, ##__VA_ARGS__)
 #define ERR_MSG(format, ...) printf("[Error]%s: " format "\r\n", __func__, ##__VA_ARGS__)
  
+#define ADC2MilliVolts(x)  ((3300)*(x)/4096)
+
 void RCC_GPIOClockCmd(GPIO_TypeDef* GPIOx, FunctionalState state);
 void RCC_USARTClockCmd(USART_TypeDef* USARTx, FunctionalState state);
 void RCC_TIMClockCmd(TIM_TypeDef* TIMx, FunctionalState NewState);

@@ -42,6 +42,8 @@
 
 #define MQ2_ADC_CHANNEL 4
 
+#define GENERAL_ANALOG_ADC_CHANNEL 4
+
 #define IR_EMIT_PORT GPIOA
 #define IR_EMIT_PIN  GPIO_Pin_6
 

@@ -6,6 +6,7 @@
 #include "dht.h"
 #include "sr501.h"
 #include "mq2.h"
+#include "analog.h"
 #include "pn532Reader.h"
 #include "lt211.h"
 #include "board.h"
@@ -161,7 +162,7 @@ static bool sensor_mq2_init(struct sensor_t *s)
 
 static bool sensor_mq2_measure(struct sensor_t *s)
 {
-    s->value.value_int = MQ2_Read();
+    s->value.value_float = MQ2_Read();
     return true;
 }
 
@@ -169,10 +170,33 @@ static struct sensor_t sensor_mq2 = {
     .model = "mq2",
     .input_name = "gas",
     .unit = "mV",
-    .value_type = SENSOR_VALUE_INT,
+    .value_type = SENSOR_VALUE_FLOAT,
     .sample_rate = 500, //ms
     .driver_init = sensor_mq2_init,
     .measure = sensor_mq2_measure,
+};
+
+static bool sensor_general_analog_init(struct sensor_t *s)
+{
+    Analog_SetChannel(GENERAL_ANALOG_ADC_CHANNEL, true);
+    return true;
+}
+
+static bool sensor_general_analog_measure(struct sensor_t *s)
+{
+    s->value.value_float = 
+        ADC2MilliVolts(Analog_GetChannelValue(GENERAL_ANALOG_ADC_CHANNEL));
+    return true;
+}
+
+static struct sensor_t sensor_general_analog = {
+    .model = "general",
+    .input_name = "analog",
+    .unit = "mV",
+    .value_type = SENSOR_VALUE_FLOAT,
+    .sample_rate = 500, //ms
+    .driver_init = sensor_general_analog_init,
+    .measure = sensor_general_analog_measure,
 };
 
 static bool sensor_pn532_init(struct sensor_t *s)
@@ -284,6 +308,9 @@ static struct sensor_t *sensors_foo[] = {
 #endif
 #ifdef ENABLE_MQ2
     &sensor_mq2,
+#endif
+#ifdef ENABLE_ANALOG
+    &sensor_general_analog,
 #endif
 #ifdef ENABLE_PN532
     &sensor_pn532,
