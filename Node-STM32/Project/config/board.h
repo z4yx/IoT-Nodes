@@ -8,6 +8,9 @@
 //选择光线传感器
 // #define ENABLE_TSL2561
 
+//选择温度传感器
+#define ENABLE_DS18B20
+
 //选择湿度传感器
 // #define ENABLE_DHT11
 

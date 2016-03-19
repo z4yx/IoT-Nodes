@@ -4,6 +4,7 @@
 #include "tsl2561.h"
 #include "bmp180.h"
 #include "dht.h"
+#include "ds18b20.h"
 #include "sr501.h"
 #include "mq2.h"
 #include "analog.h"
@@ -57,6 +58,27 @@ static struct sensor_t sensor_tsl2561 = {
     .sample_rate = 5000, //ms
     .driver_init = sensor_tsl2561_init,
     .measure = sensor_tsl2561_measure,
+};
+
+static bool sensor_ds18b20_init(struct sensor_t *s)
+{
+    return DS18B20_Init() == 0;
+}
+
+static bool sensor_ds18b20_temp_measure(struct sensor_t *s)
+{
+    s->value.value_float = DS18B20_Get_Temp()/10.0;
+    return true;
+}
+
+static struct sensor_t sensor_ds18b20_temp = {
+    .model = "ds18b20",
+    .input_name = "temperature",
+    .unit = "C",
+    .value_type = SENSOR_VALUE_FLOAT,
+    .sample_rate = 2000, //ms
+    .driver_init = sensor_ds18b20_init,
+    .measure = sensor_ds18b20_temp_measure,
 };
 
 static bool sensor_dht_init(struct sensor_t *s)
@@ -295,6 +317,9 @@ static struct sensor_t *sensors_foo[] = {
 #endif
 #ifdef ENABLE_TSL2561
     &sensor_tsl2561,
+#endif
+#ifdef ENABLE_DS18B20
+    &sensor_ds18b20_temp,
 #endif
 #ifdef ENABLE_DHT11
     &sensor_dht_temp,
