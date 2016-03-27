@@ -3,13 +3,13 @@
 
 
 //选择光线传感器
-#define ENABLE_BH1750
+// #define ENABLE_BH1750
 
 //选择光线传感器
 // #define ENABLE_TSL2561
 
 //选择温度传感器
-#define ENABLE_DS18B20
+// #define ENABLE_DS18B20
 
 //选择湿度传感器
 // #define ENABLE_DHT11
@@ -33,7 +33,7 @@
 // #define ENABLE_IR
 
 //选择通用模拟量传感器（雨水、土壤湿度）
-#define ENABLE_ANALOG
+// #define ENABLE_ANALOG
 
 //选择射频卡读卡器
 // #define ENABLE_PN532

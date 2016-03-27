@@ -5,7 +5,12 @@
 
 #define IR_DATA_BYTES     112
 #define TOTAL_IR_CHANNELS 18
-static const uint16_t volatile __attribute__((section(".eeprom")))
+static const uint16_t volatile 
+#if defined(__arm__) && !defined(__GNUC__)
+    __attribute__((at(0x0801F000)))
+#else
+    __attribute__((section(".eeprom")))
+#endif
     irData[TOTAL_IR_CHANNELS][IR_DATA_BYTES/sizeof(uint16_t)];
 static czx_vu8 irda_data[IR_DATA_BYTES];
 

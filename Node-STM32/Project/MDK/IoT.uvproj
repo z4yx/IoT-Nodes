@@ -757,6 +757,16 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\sensors\lt211.c</FilePath>
             </File>
+            <File>
+              <FileName>TSL2561.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\sensors\TSL2561.c</FilePath>
+            </File>
+            <File>
+              <FileName>ds18b20.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\sensors\ds18b20.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
