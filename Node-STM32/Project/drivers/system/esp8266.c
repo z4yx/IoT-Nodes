@@ -189,14 +189,14 @@ void ESP8266_Restart(void)
 
 bool ESP8266_CheckLuaScripts(void)
 {
-    ESP8266_LUA_CMD("print((file.list())['init.lua']~=nil and'\\035yes'or'\\035no')");
+    ESP8266_LUA_CMD("  print((file.list())['init.lua']~=nil and'\\035yes'or'\\035no')");
     Delay_ms(500); //Wait for command result
     return last_cmd_result;
 }
 
 void ESP8266_SetWiFiCredentials(void)
 {
-    ESP8266_LUA_CMD("wifi.sta.config([[%s]],[[%s]])", ROUTER_SSID, ROUTER_PASSWD);
+    ESP8266_LUA_CMD("  wifi.sta.config([[%s]],[[%s]])", ROUTER_SSID, ROUTER_PASSWD);
 }
 
 void ESP8266_InitializeLuaScripts(void)
@@ -227,4 +227,6 @@ void ESP8266_InitializeLuaScripts(void)
         MQTT_BROKER_IP, MQTT_BROKER_PORT);
 
     while(!initialize_done);
+
+    DBG_MSG("Initialized");
 }

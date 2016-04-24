@@ -23,10 +23,11 @@ int main(void)
 	bool upgradeMode = ESP8266_UpgradeModeDetected();
 
 	Init();
-
+	
 	Delay_ms(200);
 
 	DBG_MSG("----- IoT-Node Power On -----");
+	DBG_MSG("Clock Source: %d", RCC_GetSYSCLKSource());
 	ESP8266_Init(upgradeMode);
 
 #if defined(ESP_DBG_CDC)
