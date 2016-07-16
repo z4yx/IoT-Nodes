@@ -41,6 +41,7 @@
 //选择电功率表
 // #define ENABLE_LT211
 
-
+//选择空气颗粒物传感器
+#define ENABLE_GP2Y1010
 
 #endif

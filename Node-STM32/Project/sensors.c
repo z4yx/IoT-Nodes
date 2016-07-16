@@ -10,6 +10,7 @@
 #include "analog.h"
 #include "pn532Reader.h"
 #include "lt211.h"
+#include "gp2y1010.h"
 #include "board.h"
 #include "func.h"
 #include "systick.h"
@@ -243,6 +244,28 @@ static struct sensor_t sensor_pn532 = {
     .measure = sensor_pn532_measure,
 };
 
+static bool sensor_gp2y1010_init(struct sensor_t *s)
+{
+    s->value.value_float = 0;
+    return GP2Y1010_Init();
+}
+
+static bool sensor_gp2y1010_measure(struct sensor_t *s)
+{
+    s->value.value_float = GP2Y1010_Measure();
+    return true;
+}
+
+static struct sensor_t sensor_gp2y1010 = {
+    .model = "gp2y1010",
+    .input_name = "dust",
+    .unit = "mV",
+    .value_type = SENSOR_VALUE_FLOAT,
+    .sample_rate = 500, //ms
+    .driver_init = sensor_gp2y1010_init,
+    .measure = sensor_gp2y1010_measure,
+};
+
 static bool sensor_lt211_init(struct sensor_t *s)
 {
     return LT211_Init();
@@ -339,6 +362,9 @@ static struct sensor_t *sensors_foo[] = {
 #endif
 #ifdef ENABLE_PN532
     &sensor_pn532,
+#endif
+#ifdef ENABLE_GP2Y1010
+    &sensor_gp2y1010,
 #endif
 #ifdef ENABLE_LT211
     &sensor_lt211_volt,
