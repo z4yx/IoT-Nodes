@@ -767,6 +767,11 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\sensors\ds18b20.c</FilePath>
             </File>
+            <File>
+              <FileName>gy2y1010.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\sensors\gy2y1010.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
