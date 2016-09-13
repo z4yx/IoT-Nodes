@@ -23,8 +23,6 @@ int main(void)
 	bool upgradeMode = ESP8266_UpgradeModeDetected();
 
 	Init();
-	
-	Delay_ms(200);
 
 	DBG_MSG("----- IoT-Node Power On -----");
 	DBG_MSG("Clock Source: %d", RCC_GetSYSCLKSource());
@@ -36,17 +34,19 @@ int main(void)
 	if(upgradeMode && USBDevice_PlugIn())
 #endif
 	{
-		Delay_ms(2000);
 		ESP8266_Enable_CDC_Forwarding();
 		DBG_MSG( "Usb Init Started");
 		USB_Init();
-		DBG_MSG( "Usb Init Succeeded");
+		Delay_ms(1000);
+		INFO_MSG("Usb Init Succeeded");
 	}
 	
+	Delay_ms(200);
+
 	LED_BLUE(true);
 
 	if(upgradeMode){
-		DBG_MSG("ESP8266 Upgrade Mode...");
+		INFO_MSG("ESP8266 Upgrade Mode...");
 		while(true){
 			LED_BLUE(true);
 			Delay_ms(200);
