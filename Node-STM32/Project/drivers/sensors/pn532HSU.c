@@ -116,7 +116,7 @@ static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
         return PN532_TIMEOUT;
     }
     if(0 != tmp[0] || 0!= tmp[1] || 0xFF != tmp[2]){
-        DBG_MSG("Preamble error");
+        ERR_MSG("Preamble error");
         return PN532_INVALID_FRAME;
     }
     
@@ -126,7 +126,7 @@ static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
         return PN532_TIMEOUT;
     }
     if( 0 != (uint8_t)(length[0] + length[1]) ){
-        DBG_MSG("Length error");
+        ERR_MSG("Length error");
         return PN532_INVALID_FRAME;
     }
     length[0] -= 2;
@@ -140,7 +140,7 @@ static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
         return PN532_TIMEOUT;
     }
     if( PN532_PN532TOHOST != tmp[0] || cmd != tmp[1]){
-        DBG_MSG("Command error");
+        ERR_MSG("Command error");
         return PN532_INVALID_FRAME;
     }
     
@@ -157,7 +157,7 @@ static int16_t readResponse(uint8_t buf[], uint8_t len, uint16_t timeout)
         return PN532_TIMEOUT;
     }
     if( 0 != (uint8_t)(sum + tmp[0]) || 0 != tmp[1] ){
-        DBG_MSG("Checksum error");
+        ERR_MSG("Checksum error");
         return PN532_INVALID_FRAME;
     }
     
@@ -172,12 +172,12 @@ static int8_t readAckFrame()
     // DBG_MSG("Ack: ");
     
     if( receive(ackBuf, sizeof(PN532_ACK), PN532_ACK_WAIT_TIME) <= 0 ){
-        DBG_MSG("ACK Timeout");
+        ERR_MSG("ACK Timeout");
         return PN532_TIMEOUT;
     }
     
     if( memcmp(ackBuf, PN532_ACK, sizeof(PN532_ACK)) ){
-        DBG_MSG("ACK Invalid");
+        ERR_MSG("ACK Invalid");
         return PN532_INVALID_ACK;
     }
     return 0;

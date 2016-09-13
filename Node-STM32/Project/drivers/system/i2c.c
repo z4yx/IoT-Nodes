@@ -59,7 +59,7 @@ void I2C_Lib_Init()
 
 void CPAL_I2C_ERR_UserCallback(CPAL_DevTypeDef pDevInstance, uint32_t Device_Error) 
 {
-    DBG_MSG("Error: %d", Device_Error);
+    ERR_MSG("Error: %d", Device_Error);
 }
 
 

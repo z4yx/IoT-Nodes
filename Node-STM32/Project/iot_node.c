@@ -97,10 +97,10 @@ static void initNetwork(void)
         if(GetSystemTick()-tmr > ESP8266_BOOT_TIMEOUT) {
             ERR_MSG("ESP8266 booting timed out");
             if(ESP8266_CheckLuaScripts()){
-                DBG_MSG("Restarting ESP8266...");
+                ERR_MSG("Restarting ESP8266...");
                 ESP8266_Restart();
             }else{
-                DBG_MSG("Lua scripts not found, initializing...");
+                INFO_MSG("Lua scripts not found, initializing...");
                 ESP8266_InitializeLuaScripts();
                 ESP8266_Restart();
             }
@@ -108,7 +108,7 @@ static void initNetwork(void)
         }
     }
     ESP8266_SetWiFiCredentials();
-    DBG_MSG("ESP8266 started");
+    INFO_MSG("ESP8266 started");
     do {
         ESP8266_CheckWifiState();
         Delay_ms(1000);
@@ -119,7 +119,7 @@ static void initNetwork(void)
     ESP8266_InitMqttWithChipID();
     ESP8266_MqttConnect(MQTT_BROKER_IP, MQTT_BROKER_PORT);
     while (!ESP8266_IsMqttConnected());
-    DBG_MSG("MQTT connected");
+    INFO_MSG("MQTT connected");
     Delay_ms(1000);
 }
 
@@ -161,7 +161,7 @@ static void doAction(char* ctrl)
         bool changed;
         struct actuator_t* a = actuators[i];
         if(strcmp(a->actuator_name, ctrl) == 0){
-            DBG_MSG("found actuator %s", ctrl);
+            INFO_MSG("found actuator %s", ctrl);
 
             if (!a->flags & ACTUATOR_FLAG_INITIALIZED) {
                 ERR_MSG("actuator %s is not initialized", a->actuator_name);
@@ -241,8 +241,8 @@ void IoTNode_HandleControl(const char* param)
 
 void IoTNode_Begin()
 {
-    DBG_MSG("%d sensors defined", sensors_count);
-    DBG_MSG("%d actuators defined", actuators_count);
+    INFO_MSG("%d sensors defined", sensors_count);
+    INFO_MSG("%d actuators defined", actuators_count);
     initActuators();
     initSensors();
     initNetwork();

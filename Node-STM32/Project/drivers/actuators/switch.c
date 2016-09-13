@@ -27,7 +27,7 @@ void Switch_Action(bool isON)
 {
     GPIO_WriteBit(switchPorts[0], switchPins[0], 
         isON ? RELAY_ACTIVE_VAL : (RELAY_ACTIVE_VAL^1));
-    DBG_MSG("isON: %u", isON);
+    INFO_MSG("isON: %u", isON);
 }
 void Switch_ChannelAction(int channel, bool isON)
 {
@@ -38,7 +38,7 @@ void Switch_ChannelAction(int channel, bool isON)
     channel--;
     GPIO_WriteBit(switchPorts[channel], switchPins[channel], 
         isON ? RELAY_ACTIVE_VAL : (RELAY_ACTIVE_VAL^1));
-    DBG_MSG("isON[%d]: %u", channel, isON);
+    INFO_MSG("isON[%d]: %u", channel, isON);
 }
 
 

@@ -63,7 +63,7 @@ bool TSL2561_begin(void)
     uint8_t x = TSL2561_read8(TSL2561_REGISTER_ID);
     //Serial.print("0x"); Serial.println(x, HEX);
     if (x & 0x0A ) {
-        DBG_MSG("Found TSL2561");
+        INFO_MSG("Found TSL2561");
     } else {
         return false;
     }

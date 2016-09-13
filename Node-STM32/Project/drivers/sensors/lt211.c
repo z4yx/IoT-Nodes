@@ -126,7 +126,7 @@ bool LT211_Init(void)
     USARTx_Config(LT211_USART, LT211_BAUD);
     if(!LT211_readRegister16(0x00, &id))
         return false;
-    DBG_MSG("LT211 model 0x%x", id);
+    INFO_MSG("LT211 model 0x%x", id);
     initialized = (id == 0x211);
     return initialized;
 }

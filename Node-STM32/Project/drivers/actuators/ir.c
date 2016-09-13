@@ -56,7 +56,7 @@ void IR_Init()
 
 bool IR_StartLearning(uint8_t channel)
 {
-    DBG_MSG("Learning channel %d", channel);
+    INFO_MSG("Learning channel %d", channel);
     if(channel >= TOTAL_IR_CHANNELS)
         return false;
 
@@ -68,7 +68,7 @@ bool IR_StartLearning(uint8_t channel)
         Delay_ms(200);
     }
     u8 len = IRDA_learn_data_in_out(irda_data);
-    DBG_MSG("Learned, length=%d", len);
+    INFO_MSG("Learned, length=%d", len);
     if(!len)
         return false;
 
@@ -83,7 +83,7 @@ bool IR_StartLearning(uint8_t channel)
 
 bool IR_Emit(uint8_t channel)
 {
-    DBG_MSG("Emit channel %d", channel);
+    INFO_MSG("Emit channel %d", channel);
     if(channel >= TOTAL_IR_CHANNELS)
         return false;
 

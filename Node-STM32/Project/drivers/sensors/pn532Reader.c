@@ -31,7 +31,7 @@ bool PN532Reader_Init(void)
     PN532_setPassiveActivationRetries(0xFF);
     PN532_SAMConfig();
 
-    DBG_MSG("Found chip PN5%x with firmware ver. %d.%d",
+    INFO_MSG("Found chip PN5%x with firmware ver. %d.%d",
             (versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF, (versiondata >> 8) & 0xFF);
 
     return true;
