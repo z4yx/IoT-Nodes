@@ -60,6 +60,12 @@ void USBCommon_Init(void)
   GPIO_InitStructure.GPIO_Pin = USB_DET_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
   GPIO_Init(USB_DET_PORT, &GPIO_InitStructure);
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_ResetBits(GPIOA, GPIO_Pin_12);
 }
 
 bool USBDevice_PlugIn()
@@ -227,4 +233,34 @@ void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len)
     
     pbuf[ 2* idx + 1] = 0;
   }
+}
+
+void USB_Reenumerate(void)
+{
+  /* Force USB reset and power-down (this will also release the USB pins for direct GPIO control) */
+  _SetCNTR(CNTR_FRES | CNTR_PDWN);
+
+  /* Using a "dirty" method to force a re-enumeration: */
+  /* Force DPM (Pin PA12) low for ca. 10 mS before USB Tranceiver will be enabled */
+  /* This overrules the external Pull-Up at PA12, and at least Windows & MacOS will enumerate again */
+  GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_ResetBits(GPIOA, GPIO_Pin_12);
+
+  Delay_ms(50);
+
+  /* Release power-down, still hold reset */
+  _SetCNTR(CNTR_PDWN);
+  Delay_us(5);
+
+  /* CNTR_FRES = 0 */
+  _SetCNTR(0);
+
+  /* Clear pending interrupts */
+  _SetISTR(0);
+
 }
