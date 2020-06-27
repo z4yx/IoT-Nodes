@@ -1,7 +1,7 @@
 #include "common.h"
 #include "sensors.h"
 #include "bh1750.h"
-#include "tsl2561.h"
+#include "TSL2561.h"
 #include "bmp180.h"
 #include "dht.h"
 #include "ds18b20.h"
