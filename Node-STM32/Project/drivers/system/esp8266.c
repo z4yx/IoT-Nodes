@@ -102,8 +102,21 @@ bool ESP8266_UpgradeModeDetected()
     return GPIO_ReadInputDataBit(ESP8266_IO_PORT, ESP8266_IO0_PIN) == RESET;
 }
 
+int ESP8266_ReadIO2()
+{
+    return GPIO_ReadInputDataBit(ESP8266_IO_PORT, ESP8266_IO2_PIN);
+}
+
 void ESP8266_Init(bool upgrade_baud)
 {
+    GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_GPIOClockCmd(ESP8266_IO_PORT, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = ESP8266_IO2_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+    GPIO_Init(ESP8266_IO_PORT, &GPIO_InitStructure);
+
     CDC_Forwarding = false;
     USARTx_Config(ESP8266_USART, upgrade_baud ? 115200 : 9600);
     USART_RxInt_Config(true, ESP8266_USART, ESP8266_USART_IRQ);

@@ -3,6 +3,7 @@
 
 
 void ESP8266_Init(bool upgrade_baud);
+int ESP8266_ReadIO2(void);
 void ESP8266_Enable_CDC_Forwarding(void);
 bool ESP8266_IsStarted(void);
 void ESP8266_CheckWifiState(void);

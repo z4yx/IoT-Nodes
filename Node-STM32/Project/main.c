@@ -54,8 +54,20 @@ int main(void)
 			Delay_ms(200);
 		}
 	}
-	else
-		IoTNode_Begin();
+	else{
+		GPIO_InitTypeDef GPIO_InitStructure;
+		RCC_GPIOClockCmd(GPIOB, ENABLE);
+
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		GPIO_Init(GPIOB, &GPIO_InitStructure);
+		// IoTNode_Begin();
+		for(;;){
+			int pin_val = ESP8266_ReadIO2();
+			GPIO_WriteBit(GPIOB, GPIO_Pin_11, pin_val);
+		}
+	}
 }
 
 #ifdef  USE_FULL_ASSERT

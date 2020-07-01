@@ -36,11 +36,11 @@
 
 const int buttonPin = 0;
 const int ledPin = 13; 
-const int relayPin = 12;
+const int relayPin = 2;
 
 /* Set these to your desired credentials. */
-const char *ssid = "ESPswitch";
-const char *password = "thin8266";
+const char *ssid = "ESPswitch5";
+const char *password = "thinpadng8266";
 
 ESP8266WebServer server(80);
 
@@ -62,6 +62,9 @@ void handleOff() {
 }
 
 void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, HIGH);
 	delay(1000);
 	Serial.begin(115200);
 	Serial.println();
@@ -77,8 +80,6 @@ void setup() {
   server.on("/off", handleOff);
 	server.begin();
 	Serial.println("HTTP server started");
-  pinMode(ledPin, OUTPUT);
-  pinMode(relayPin, OUTPUT);
 }
 
 int ledState = HIGH;         // the current state of the output pin
@@ -89,6 +90,7 @@ unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 unsigned long lastBtnDown = 0;
 
+#if 0
 void handleButton() {
   // read the state of the switch into a local variable:
   int reading = digitalRead(buttonPin);
@@ -130,8 +132,9 @@ void handleButton() {
   // it'll be the lastButtonState:
   lastButtonState = reading;
 }
+#endif
 
 void loop() {
-  handleButton();
+  // handleButton();
 	server.handleClient();
 }
